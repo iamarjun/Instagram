@@ -1,36 +1,35 @@
-package com.alwaysbaked.instagramclone;
+package com.alwaysbaked.instagramclone.Home;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ShareActivity extends AppCompatActivity {
-    private static final String TAG = "ShareActivity";
-    private static final int ACTIVITY_NUMBER = 2;
-    private Context mContext = ShareActivity.this;
+public class HomeActivity extends AppCompatActivity {
+    private static final String TAG = "HomeActivity";
+    private static final int ACTIVITY_NUMBER = 0;
+    private Context mContext = HomeActivity.this;
 
     @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Log.d(TAG, "onCreate: staring.");
+        Log.d(TAG, "onCreate: starting.");
         ButterKnife.bind(this);
 
         setupBottomNavigationView();
-
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.alwaysbaked.instagramclone;
+package com.alwaysbaked.instagramclone.Share;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,16 +8,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SearchActivity extends AppCompatActivity {
-    private static final String TAG = "SearchActivity";
-    private static final int ACTIVITY_NUMBER = 1;
-    private Context mContext = SearchActivity.this;
+public class ShareActivity extends AppCompatActivity {
+    private static final String TAG = "ShareActivity";
+    private static final int ACTIVITY_NUMBER = 2;
+    private Context mContext = ShareActivity.this;
 
     @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
