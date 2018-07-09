@@ -2,6 +2,7 @@ package com.alwaysbaked.instagramclone;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -13,22 +14,23 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends AppCompatActivity {
-    private static final String TAG = "HomeActivity";
-    private static final int ACTIVITY_NUMBER = 0;
-    private Context mContext = HomeActivity.this;
+public class LikesActivity extends AppCompatActivity {
+    private static final String TAG = "LikesActivity";
+    private static final int ACTIVITY_NUMBER = 3;
+    private Context mContext = LikesActivity.this;
 
     @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Log.d(TAG, "onCreate: starting.");
+        Log.d(TAG, "onCreate: staring.");
         ButterKnife.bind(this);
 
         setupBottomNavigationView();
+
     }
 
     /**

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/ic_house"
+        android:id="@+id/ic_home"
         android:icon="@drawable/ic_home"
         android:title="">
     </item>
@@ -14,8 +14,8 @@
     </item>
 
     <item
-        android:id="@+id/ic_add"
-        android:icon="@drawable/ic_add"
+        android:id="@+id/ic_share"
+        android:icon="@drawable/ic_share"
         android:title="">
     </item>
 
