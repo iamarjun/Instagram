@@ -29,12 +29,23 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="paddingPercent" value="-5" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                     </map>
                                   </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\arjun\Desktop\Misc\Android Studio Projects\insta\instalogo.png" />
+                                      <entry key="imageAsset" value="C:\Users\arjun\Desktop\Misc\Android Studio Projects\insta\instaicon.png" />
                                       <entry key="outputName" value="ic_insta" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="000000" />

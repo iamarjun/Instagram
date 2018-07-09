@@ -2,6 +2,8 @@ package com.alwaysbaked.instagramclone.Home;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +23,10 @@ public class HomeActivity extends AppCompatActivity {
 
     @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
+    @BindView(R.id.container)
+    ViewPager viewPager;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,23 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setupBottomNavigationView();
+        setupViewPager();
+    }
+
+    /**
+     * Responsible for adding tabs: Camera, Home, Messages
+     */
+    public void setupViewPager(){
+        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new CameraFragment());// index 0
+        adapter.addFragment(new HomeFragment());// index 1
+        adapter.addFragment(new MessagesFragment());// index 2
+        viewPager.setAdapter(adapter);
+
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_camera);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_insta);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_send);
     }
 
     /**
