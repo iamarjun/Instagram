@@ -13,11 +13,11 @@
         <include layout="@layout/layout_bottom_navigation_view" />
 
         <ProgressBar
+            android:id="@+id/profileProgressBar"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp"
-            android:visibility="invisible"/>
+            android:layout_marginTop="100dp" />
 
     </RelativeLayout>
 
