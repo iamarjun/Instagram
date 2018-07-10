@@ -79,7 +79,7 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    tools:text="Arjun Manoj" />
+                    android:text="Arjun Manoj" />
 
                 <TextView
                     android:id="@+id/description"
@@ -88,7 +88,7 @@
                     android:layout_marginTop="5dp"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    tools:text="Never Settle" />
+                    android:text="Never Settle" />
 
                 <TextView
                     android:id="@+id/website"
@@ -97,7 +97,7 @@
                     android:layout_marginTop="5dp"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    tools:text="www.alwaysbaked.com" />
+                    android:text="www.alwaysbaked.com" />
 
             </LinearLayout>
 
