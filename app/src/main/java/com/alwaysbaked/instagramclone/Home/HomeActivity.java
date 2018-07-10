@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
+import com.alwaysbaked.instagramclone.Utils.SectionsPagerAdapter;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import butterknife.BindView;
