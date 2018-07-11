@@ -12,7 +12,9 @@ import android.view.MenuItem;
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
 import com.alwaysbaked.instagramclone.Utils.SectionsPagerAdapter;
+import com.alwaysbaked.instagramclone.Utils.UniversalImageLoader;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,8 +38,15 @@ public class HomeActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: starting.");
         ButterKnife.bind(this);
 
+        initImageLoader();
+
         setupBottomNavigationView();
         setupViewPager();
+    }
+
+    private void initImageLoader() {
+        UniversalImageLoader imageLoader = new UniversalImageLoader(mContext);
+        ImageLoader.getInstance().init(imageLoader.getConfig());
     }
 
     /**
