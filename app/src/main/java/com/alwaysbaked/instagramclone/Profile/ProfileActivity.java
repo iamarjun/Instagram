@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
     private static final int ACTIVITY_NUMBER = 4;
+    private static final int NUM_GRID_COLUMNS = 3;
     private Context mContext = ProfileActivity.this;
 
     @BindView(R.id.bottomNavViewBar)
@@ -78,6 +79,12 @@ public class ProfileActivity extends AppCompatActivity {
         imgURLs.add("https://images4.alphacoders.com/742/thumb-1920-742220.png");
         imgURLs.add("https://images8.alphacoders.com/761/thumb-1920-761063.png");
         imgURLs.add("https://images7.alphacoders.com/867/thumb-1920-867450.png");
+        imgURLs.add("https://images8.alphacoders.com/864/thumb-1920-864900.png");
+        imgURLs.add("https://images6.alphacoders.com/803/thumb-1920-803643.png");
+        imgURLs.add("https://images5.alphacoders.com/810/thumb-1920-810680.png");
+        imgURLs.add("https://images3.alphacoders.com/886/thumb-1920-886032.png");
+        imgURLs.add("https://images8.alphacoders.com/851/thumb-1920-851512.png");
+        imgURLs.add("https://images3.alphacoders.com/712/thumb-1920-712467.jpg");
 
         setupImageGrid(imgURLs);
     }
@@ -88,6 +95,10 @@ public class ProfileActivity extends AppCompatActivity {
                 "",
                 imgURLs);
         mGridView.setAdapter(adapter);
+
+        int gridWidth = getResources().getDisplayMetrics().widthPixels;
+        int imageWidth = gridWidth/NUM_GRID_COLUMNS;
+        mGridView.setColumnWidth(imageWidth);
 
     }
 
