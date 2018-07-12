@@ -24,6 +24,8 @@
         <activity android:name=".Share.ShareActivity" />
         <activity android:name=".Profile.ProfileActivity" />
         <activity android:name=".Profile.AccountSettingsActivity" />
+        <activity android:name=".Login.SignUpActivity" />
+        <activity android:name=".Login.LoginActivity" />
     </application>
 
 </manifest>
