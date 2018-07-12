@@ -84,11 +84,11 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     private void setupSettingsList(){
         Log.d(TAG, "setupSettingsList: initializing account settings list.");
-        List<String> option = new ArrayList<>();
+        ArrayList<String> option = new ArrayList<>();
         option.add(getString(R.string.edit_profile_fragment));//fragment #0
         option.add(getString(R.string.sign_out_fragment));//fragment #1
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_1, option );
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, option );
         listView.setAdapter(arrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

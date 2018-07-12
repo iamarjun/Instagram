@@ -103,6 +103,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         mAuth.addAuthStateListener(mAuthStateListener);
+        checkCurrentUser(mAuth.getCurrentUser());
         /*updateUI(currentUser);*/
     }
 
@@ -114,8 +115,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     * checked to see if @param 'user' is logged in.
-     * @param user
+     *
+     * @param user checked to see if user is logged in.
      */
 
     private void checkCurrentUser(FirebaseUser user) {
