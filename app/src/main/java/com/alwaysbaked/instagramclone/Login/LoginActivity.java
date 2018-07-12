@@ -66,8 +66,8 @@ public class LoginActivity extends AppCompatActivity {
         init();
     }
 
-    private void updateUI(FirebaseUser user){
-        if (user != null){
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
             mProgressBar.setVisibility(View.GONE);
             mAuthentication.setVisibility(View.GONE);
         } else {
@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
     ------------------------------------------ Firebase --------------------------------------------
      */
 
-    private void init(){
+    private void init() {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
-                
+
                 if (email.isEmpty() && password.isEmpty()) {
                     Toast.makeText(mContext, "Fields can't be empty.", Toast.LENGTH_SHORT).show();
                 } else {
@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
             }
-            
+
         });
 
         linkSignUp.setOnClickListener(new View.OnClickListener() {
@@ -111,12 +111,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
-
         /*
          * if the user is logged in then navigate to 'HomeActivity' and call 'finish()'
          */
-        if (mAuth.getCurrentUser() != null){
+        if (mAuth.getCurrentUser() != null) {
             Intent intent = new Intent(mContext, HomeActivity.class);
             startActivity(intent);
             finish();
@@ -124,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void signIn(String email, String password){
+    private void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override

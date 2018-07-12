@@ -1,6 +1,7 @@
 package com.alwaysbaked.instagramclone.Login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,8 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alwaysbaked.instagramclone.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -27,7 +32,6 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     private Context mContext = SignUpActivity.this;
-    private String email, fullname, password;
 
     @BindView(R.id.input_email)
     EditText mEmail;
@@ -42,7 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.signingUp)
     TextView mSigningUp;
 
-    @BindView(R.id.link_signup)
+    @BindView(R.id.link_login)
     TextView linkLogin;
 
     @BindView(R.id.btn_signup)
@@ -60,6 +64,7 @@ public class SignUpActivity extends AppCompatActivity {
         mSigningUp.setVisibility(View.GONE);
 
         setupFrebaseAuth();
+        init();
     }
 
     private void updateUI(FirebaseUser user){
@@ -76,6 +81,67 @@ public class SignUpActivity extends AppCompatActivity {
     /*
     ------------------------------------------ Firebase --------------------------------------------
      */
+
+    private void init(){
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: signin in new user");
+
+                String email = mEmail.getText().toString().trim();
+                String fullName = mFullName.getText().toString().trim();
+                String password = mPassword.getText().toString().trim();
+
+                if (email.isEmpty() && fullName.isEmpty() && password.isEmpty()) {
+                    Toast.makeText(mContext, "Fields can't be empty.", Toast.LENGTH_SHORT).show();
+                } else {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mSigningUp.setVisibility(View.VISIBLE);
+
+                    createAccount(email, password);
+
+                }
+
+
+            }
+        });
+
+        linkLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating to login screen.");
+                Intent intent = new Intent(mContext, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void createAccount(String email, String password){
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            Toast.makeText(mContext, "Authentication success.",
+                                    Toast.LENGTH_SHORT).show();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                            finish();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(mContext, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
+
+                        // ...
+                    }
+                });
+
+    }
 
     /**
      * setup firebase auth object.
