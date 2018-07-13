@@ -97,22 +97,6 @@ public class HomeActivity extends AppCompatActivity {
     ------------------------------------------ Firebase --------------------------------------------
      */
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        mAuth.addAuthStateListener(mAuthStateListener);
-        checkCurrentUser(mAuth.getCurrentUser());
-        /*updateUI(currentUser);*/
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mAuthStateListener != null)
-            mAuth.removeAuthStateListener(mAuthStateListener);
-    }
-
     /**
      * @param user checked to see if user is logged in.
      */
@@ -123,8 +107,6 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(mContext, LoginActivity.class);
             startActivity(intent);
         }
-
-
     }
 
     /**
@@ -150,7 +132,22 @@ public class HomeActivity extends AppCompatActivity {
             }
         };
 
-
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        mAuth.addAuthStateListener(mAuthStateListener);
+        checkCurrentUser(mAuth.getCurrentUser());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthStateListener != null)
+            mAuth.removeAuthStateListener(mAuthStateListener);
+    }
+
 
 }

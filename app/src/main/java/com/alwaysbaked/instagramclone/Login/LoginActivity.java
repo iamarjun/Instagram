@@ -66,16 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         init();
     }
 
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            mProgressBar.setVisibility(View.GONE);
-            mAuthentication.setVisibility(View.GONE);
-        } else {
-            mProgressBar.setVisibility(View.VISIBLE);
-            mAuthentication.setVisibility(View.VISIBLE);
-        }
-    }
-
     /*
     ------------------------------------------ Firebase --------------------------------------------
      */
@@ -92,7 +82,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (email.isEmpty() && password.isEmpty()) {
                     Toast.makeText(mContext, "Fields can't be empty.", Toast.LENGTH_SHORT).show();
                 } else {
-                    updateUI(null);
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mAuthentication.setVisibility(View.VISIBLE);
                     signIn(email, password);
 
                 }
@@ -128,7 +119,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            mProgressBar.setVisibility(View.GONE);
+                            mAuthentication.setVisibility(View.GONE);
                             try {
                                 if (user.isEmailVerified()) {
                                     Log.d(TAG, "onComplete: email verified");
@@ -136,7 +128,8 @@ public class LoginActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }else {
                                     Toast.makeText(mContext, "Verify email to sign in.", Toast.LENGTH_SHORT).show();
-                                    updateUI(user);
+                                    mProgressBar.setVisibility(View.GONE);
+                                    mAuthentication.setVisibility(View.GONE);
                                     mAuth.signOut();
                                 }
 
@@ -149,7 +142,8 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(mContext, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+                            mProgressBar.setVisibility(View.GONE);
+                            mAuthentication.setVisibility(View.GONE);
                         }
 
                         // ...
@@ -185,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         mAuth.addAuthStateListener(mAuthStateListener);
-        //updateUI(currentUser);
+
     }
 
     @Override

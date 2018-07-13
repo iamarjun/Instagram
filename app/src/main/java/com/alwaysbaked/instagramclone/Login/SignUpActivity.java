@@ -81,17 +81,6 @@ public class SignUpActivity extends AppCompatActivity {
         init();
     }
 
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            mProgressBar.setVisibility(View.GONE);
-            mSigningUp.setVisibility(View.GONE);
-        } else {
-            mProgressBar.setVisibility(View.VISIBLE);
-            mSigningUp.setVisibility(View.VISIBLE);
-        }
-    }
-
-
     /*
     ------------------------------------------ Firebase --------------------------------------------
      */
@@ -109,7 +98,8 @@ public class SignUpActivity extends AppCompatActivity {
                 if (email.isEmpty() && username.isEmpty() && password.isEmpty()) {
                     Toast.makeText(mContext, "Fields can't be empty.", Toast.LENGTH_SHORT).show();
                 } else {
-                    updateUI(null);
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mSigningUp.setVisibility(View.VISIBLE);
                     firebaseMethods.createAccount(email, password, username);
 
                 }
