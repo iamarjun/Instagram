@@ -18,7 +18,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 public class BottomNavigationViewHelper {
     private static final String TAG = "BottomNavigationViewHel";
 
-    public static void setupBottomNavigationView(BottomNavigationViewEx bottomNavigationViewEx){
+    public static void setupBottomNavigationView(BottomNavigationViewEx bottomNavigationViewEx) {
         Log.d(TAG, "setupBottomNavigationView: setting up BottomnavigationView");
 
         bottomNavigationViewEx.enableAnimation(false);
@@ -27,11 +27,11 @@ public class BottomNavigationViewHelper {
         bottomNavigationViewEx.setTextVisibility(false);
     }
 
-    public static void enableNavigation(final Context context, BottomNavigationViewEx viewEx){
+    public static void enableNavigation(final Context context, BottomNavigationViewEx viewEx) {
         viewEx.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
 
                     case R.id.ic_home:
                         Intent intent1 = new Intent(context, HomeActivity.class);//ACTIVITY_NUMBER = 0

@@ -23,11 +23,6 @@ import butterknife.ButterKnife;
 
 public class SignOutFragment extends Fragment {
     private static final String TAG = "SignOutFragment";
-
-    //firebase
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
-
     @BindView(R.id.progressBar)
     ProgressBar mProgressbar;
     @BindView(R.id.tvSigningOut)
@@ -36,7 +31,9 @@ public class SignOutFragment extends Fragment {
     TextView tvSignOut;
     @BindView(R.id.btnConfirmSignOut)
     Button btnSignOut;
-
+    //firebase
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Nullable
     @Override
@@ -51,7 +48,7 @@ public class SignOutFragment extends Fragment {
         tvSigningOut.setVisibility(View.GONE);
 
         setupFrebaseAuth();
-        
+
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,7 +110,6 @@ public class SignOutFragment extends Fragment {
         if (mAuthStateListener != null)
             mAuth.removeAuthStateListener(mAuthStateListener);
     }
-
 
 
 }

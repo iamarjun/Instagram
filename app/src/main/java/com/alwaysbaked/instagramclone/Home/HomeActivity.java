@@ -27,15 +27,13 @@ import butterknife.ButterKnife;
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";
     private static final int ACTIVITY_NUMBER = 0;
-    private Context mContext = HomeActivity.this;
-
     @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
     @BindView(R.id.container)
     ViewPager viewPager;
     @BindView(R.id.tabs)
     TabLayout tabLayout;
-
+    private Context mContext = HomeActivity.this;
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;

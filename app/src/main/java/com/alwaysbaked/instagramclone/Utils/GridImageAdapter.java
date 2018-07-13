@@ -36,11 +36,6 @@ public class GridImageAdapter extends ArrayAdapter<String> {
         this.imgURLs = imgURLs;
     }
 
-    private static class ViewHolder {
-        SquareImageView image;
-        ProgressBar mProgressBar;
-    }
-
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -88,5 +83,10 @@ public class GridImageAdapter extends ArrayAdapter<String> {
         });
 
         return convertView;
+    }
+
+    private static class ViewHolder {
+        SquareImageView image;
+        ProgressBar mProgressBar;
     }
 }

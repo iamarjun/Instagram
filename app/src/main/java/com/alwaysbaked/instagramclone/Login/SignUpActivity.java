@@ -15,9 +15,6 @@ import android.widget.Toast;
 
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.FirebaseMethods;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,38 +28,29 @@ import butterknife.ButterKnife;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignUpActivity";
-    private Context mContext = SignUpActivity.this;
-
-    //firebase
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private FirebaseDatabase mFirebaseDatabse;
-    private DatabaseReference mRef;
-    private FirebaseMethods firebaseMethods;
-
-
-
-    private String email, username, password;
-    private String append = "";
-
     @BindView(R.id.input_email)
     EditText mEmail;
     @BindView(R.id.input_username)
     EditText mUsername;
     @BindView(R.id.input_password)
     EditText mPassword;
-
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
-
     @BindView(R.id.signingUp)
     TextView mSigningUp;
-
     @BindView(R.id.link_login)
     TextView linkLogin;
-
     @BindView(R.id.btn_signup)
     Button btnSignUp;
+    private Context mContext = SignUpActivity.this;
+    //firebase
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private FirebaseDatabase mFirebaseDatabse;
+    private DatabaseReference mRef;
+    private FirebaseMethods firebaseMethods;
+    private String email, username, password;
+    private String append = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

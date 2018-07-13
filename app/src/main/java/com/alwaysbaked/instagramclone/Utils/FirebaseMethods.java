@@ -53,7 +53,7 @@ public class FirebaseMethods {
 
                             userID = mAuth.getCurrentUser().getUid();
 
-                            } else {
+                        } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(mContext, "Authentication failed.",
@@ -80,7 +80,7 @@ public class FirebaseMethods {
             user.setUsername(ds.getValue(User.class).getUsername());
             Log.d(TAG, "checkIfUsernameExists: username: " + user.getUsername());
 
-            if (StringManipulation.expandUsername(user.getUsername()).equals(username)){
+            if (StringManipulation.expandUsername(user.getUsername()).equals(username)) {
                 Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH: " + user.getUsername());
                 return true;
             }
@@ -88,10 +88,10 @@ public class FirebaseMethods {
         return false;
     }
 
-    public void sendVerificationEmail(){
+    public void sendVerificationEmail() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (user != null){
+        if (user != null) {
             user.sendEmailVerification()
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -107,18 +107,19 @@ public class FirebaseMethods {
 
     /**
      * adding information to user and user_account_settings node.
-     * @param email email of the user, also user for email verification
-     * @param username username of the user ??!! duh !!
-     * @param description user's description
-     * @param website user's website link
+     *
+     * @param email         email of the user, also user for email verification
+     * @param username      username of the user ??!! duh !!
+     * @param description   user's description
+     * @param website       user's website link
      * @param profile_photo user's profile photo.
      */
 
-    public void addNewUser(String email, String username, String description, String website, String profile_photo){
+    public void addNewUser(String email, String username, String description, String website, String profile_photo) {
         User user = new User(
                 userID,
                 0,
-                email ,
+                email,
                 StringManipulation.condenseUsername(username));
 
         mRef.child(mContext.getString(R.string.dbname_users))

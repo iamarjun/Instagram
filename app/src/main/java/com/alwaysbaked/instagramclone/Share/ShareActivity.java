@@ -18,10 +18,9 @@ import butterknife.ButterKnife;
 public class ShareActivity extends AppCompatActivity {
     private static final String TAG = "ShareActivity";
     private static final int ACTIVITY_NUMBER = 2;
-    private Context mContext = ShareActivity.this;
-
     @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
+    private Context mContext = ShareActivity.this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

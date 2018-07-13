@@ -18,10 +18,9 @@ import butterknife.ButterKnife;
 public class LikesActivity extends AppCompatActivity {
     private static final String TAG = "LikesActivity";
     private static final int ACTIVITY_NUMBER = 3;
-    private Context mContext = LikesActivity.this;
-
     @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
+    private Context mContext = LikesActivity.this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

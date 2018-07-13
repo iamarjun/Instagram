@@ -27,28 +27,22 @@ import butterknife.ButterKnife;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-
-    private Context mContext = LoginActivity.this;
-
-    //firebase
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
-
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
-
     @BindView(R.id.input_email)
     EditText mEmail;
     @BindView(R.id.input_password)
     EditText mPassword;
-
     @BindView(R.id.authentication)
     TextView mAuthentication;
     @BindView(R.id.link_signup)
     TextView linkSignUp;
-
     @BindView(R.id.btn_login)
     Button btnLogin;
+    private Context mContext = LoginActivity.this;
+    //firebase
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.d(TAG, "onComplete: email verified");
                                     Intent intent = new Intent(mContext, HomeActivity.class);
                                     startActivity(intent);
-                                }else {
+                                } else {
                                     Toast.makeText(mContext, "Verify email to sign in.", Toast.LENGTH_SHORT).show();
                                     mProgressBar.setVisibility(View.GONE);
                                     mAuthentication.setVisibility(View.GONE);
@@ -134,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }
 
 
-                            }catch (NullPointerException e) {
+                            } catch (NullPointerException e) {
                                 Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage());
                             }
                         } else {

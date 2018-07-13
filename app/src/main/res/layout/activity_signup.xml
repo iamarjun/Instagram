@@ -21,10 +21,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:text="Sign up to see photos and videos from your friends."
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_marginBottom="20dp"/>
+            android:textSize="20sp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

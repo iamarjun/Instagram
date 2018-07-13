@@ -30,8 +30,6 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
     private static final int ACTIVITY_NUMBER = 4;
     private static final int NUM_GRID_COLUMNS = 3;
-    private Context mContext = ProfileActivity.this;
-
     @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
     @BindView(R.id.profileToolBar)
@@ -42,9 +40,9 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView profilePhoto;
     @BindView(R.id.gridView)
     GridView mGridView;
-
     @BindView(R.id.profileProgressBar)
     ProgressBar mProgressBar;
+    private Context mContext = ProfileActivity.this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,7 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
         mGridView.setAdapter(adapter);
 
         int gridWidth = getResources().getDisplayMetrics().widthPixels;
-        int imageWidth = gridWidth/NUM_GRID_COLUMNS;
+        int imageWidth = gridWidth / NUM_GRID_COLUMNS;
         mGridView.setColumnWidth(imageWidth);
 
     }

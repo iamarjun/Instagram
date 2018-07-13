@@ -1,53 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="130dp"
-        android:layout_centerHorizontal="true">
-        
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="130dp">
+
         <TextView
             android:id="@+id/tvConfirmSignOut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:text="Sign Out of Instagram ?"
             android:textColor="@color/black"
-            android:text="Sign Out of Instagram ?"/>
+            android:textSize="20sp" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btnConfirmSignOut"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Sign Out"
-            android:textSize="20sp"
-            android:background="@drawable/white_rounded_button"
             android:layout_below="@+id/tvConfirmSignOut"
-            android:layout_marginTop="20dp"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/white_rounded_button"
+            android:text="Sign Out"
+            android:textSize="20sp" />
 
     </RelativeLayout>
-    
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
 
     <TextView
         android:id="@+id/tvSigningOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Signing Out...."
-        android:textSize="20sp"
-        android:textColor="@color/black"
         android:layout_alignBottom="@+id/progressBar"
-        android:layout_alignStart="@+id/progressBar"
         android:layout_alignEnd="@+id/progressBar"
-        />
+        android:layout_alignStart="@+id/progressBar"
+        android:text="Signing Out...."
+        android:textColor="@color/black"
+        android:textSize="20sp" />
 
 
 </RelativeLayout>

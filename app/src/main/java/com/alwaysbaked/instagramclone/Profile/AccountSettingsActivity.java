@@ -21,7 +21,6 @@ import com.alwaysbaked.instagramclone.Utils.SectionsStatePagerAdapter;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,22 +28,18 @@ import butterknife.ButterKnife;
 public class AccountSettingsActivity extends AppCompatActivity {
     private static final String TAG = "AccountSettingsActivity";
     private static final int ACTIVITY_NUMBER = 4;
-
-    private Context mContext = AccountSettingsActivity.this;
-    private SectionsStatePagerAdapter pagerAdapter;
-
     @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
     @BindView(R.id.container)
     ViewPager mViewPager;
     @BindView(R.id.relLayout1)
     RelativeLayout mRelativeLayout;
-
     @BindView(R.id.lvAccountSettngs)
     ListView listView;
     @BindView(R.id.backArrow)
     ImageView backArrow;
-
+    private Context mContext = AccountSettingsActivity.this;
+    private SectionsStatePagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,27 +63,27 @@ public class AccountSettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void setupFragments(){
+    private void setupFragments() {
         pagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(new EditProfileFragment(), getString(R.string.edit_profile_fragment)); //fragment #0
         pagerAdapter.addFragment(new SignOutFragment(), getString(R.string.sign_out_fragment));  //fragment #1
 
     }
 
-    private void setViewPager(int fragmentNumber){
+    private void setViewPager(int fragmentNumber) {
         mRelativeLayout.setVisibility(View.GONE);
         Log.d(TAG, "setViewPager: navigating to fragment #" + fragmentNumber);
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.setCurrentItem(fragmentNumber);
     }
 
-    private void setupSettingsList(){
+    private void setupSettingsList() {
         Log.d(TAG, "setupSettingsList: initializing account settings list.");
         ArrayList<String> option = new ArrayList<>();
         option.add(getString(R.string.edit_profile_fragment));//fragment #0
         option.add(getString(R.string.sign_out_fragment));//fragment #1
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, option );
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, option);
         listView.setAdapter(arrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

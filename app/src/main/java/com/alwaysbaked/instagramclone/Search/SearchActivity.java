@@ -18,10 +18,9 @@ import butterknife.ButterKnife;
 public class SearchActivity extends AppCompatActivity {
     private static final String TAG = "SearchActivity";
     private static final int ACTIVITY_NUMBER = 1;
-    private Context mContext = SearchActivity.this;
-
     @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
+    private Context mContext = SearchActivity.this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
