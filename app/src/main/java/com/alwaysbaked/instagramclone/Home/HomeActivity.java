@@ -115,7 +115,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param user checked to see if user is logged in.
      */
 

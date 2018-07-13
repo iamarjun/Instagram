@@ -1,0 +1,12 @@
+package com.alwaysbaked.instagramclone.Utils;
+
+public class StringManipulation {
+
+    public static String expandUsername(String username) {
+        return username.replace(".", " ");
+    }
+
+    public static String condenseUsrname(String username){
+        return username.replace("", ".");
+    }
+}

@@ -15,11 +15,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alwaysbaked.instagramclone.R;
+import com.alwaysbaked.instagramclone.Utils.FirebaseMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,8 +36,14 @@ public class SignUpActivity extends AppCompatActivity {
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private FirebaseDatabase mFirebaseDatabse;
+    private DatabaseReference mRef;
+    private FirebaseMethods firebaseMethods;
+
 
     private Context mContext = SignUpActivity.this;
+    private String email, username, password;
+    private String append = "";
 
     @BindView(R.id.input_email)
     EditText mEmail;
@@ -59,6 +71,8 @@ public class SignUpActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: started.");
 
         ButterKnife.bind(this);
+
+        firebaseMethods = new FirebaseMethods(mContext);
 
         mProgressBar.setVisibility(View.GONE);
         mSigningUp.setVisibility(View.GONE);
@@ -88,11 +102,11 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: signin in new user");
 
-                String email = mEmail.getText().toString().trim();
-                String fullName = mFullName.getText().toString().trim();
-                String password = mPassword.getText().toString().trim();
+                email = mEmail.getText().toString().trim();
+                username = mFullName.getText().toString().trim();
+                password = mPassword.getText().toString().trim();
 
-                if (email.isEmpty() && fullName.isEmpty() && password.isEmpty()) {
+                if (email.isEmpty() && username.isEmpty() && password.isEmpty()) {
                     Toast.makeText(mContext, "Fields can't be empty.", Toast.LENGTH_SHORT).show();
                 } else {
                     mProgressBar.setVisibility(View.VISIBLE);
@@ -151,13 +165,37 @@ public class SignUpActivity extends AppCompatActivity {
         Log.d(TAG, "setupFrebaseAuth: setting up firebase auth.");
 
         mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabse = FirebaseDatabase.getInstance();
+        mRef = mFirebaseDatabse.getReference();
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null)
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
                     Log.d(TAG, "onAuthStateChanged: signed in:" + user.getUid());
+
+                    mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            //1st check: make sure username is not already in use.
+                            if (firebaseMethods.checkIfUsernameExists(username, dataSnapshot )){
+                                append = mRef.push().getKey().substring(3, 10);
+                                Log.d(TAG, "onDataChange: username already exists. Appending random string to name: " + append);
+                            }
+
+                            username = username + append;
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
                 else
                     Log.d(TAG, "onAuthStateChanged: signed out");
             }
