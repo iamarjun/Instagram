@@ -7,5 +7,5 @@
 
     <!--firebase database fields-->
     <string name="dbname_users">users</string>
-    <string name="dbname_users_account_settings">users_account_settings</string>
+    <string name="dbname_users_account_settings">user_account_settings</string>
 </resources>

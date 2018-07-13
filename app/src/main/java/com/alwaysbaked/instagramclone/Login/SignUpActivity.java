@@ -1,7 +1,6 @@
 package com.alwaysbaked.instagramclone.Login;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,6 +31,7 @@ import butterknife.ButterKnife;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignUpActivity";
+    private Context mContext = SignUpActivity.this;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -41,14 +41,14 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseMethods firebaseMethods;
 
 
-    private Context mContext = SignUpActivity.this;
+
     private String email, username, password;
     private String append = "";
 
     @BindView(R.id.input_email)
     EditText mEmail;
-    @BindView(R.id.input_fullname)
-    EditText mFullName;
+    @BindView(R.id.input_username)
+    EditText mUsername;
     @BindView(R.id.input_password)
     EditText mPassword;
 
@@ -77,12 +77,12 @@ public class SignUpActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.GONE);
         mSigningUp.setVisibility(View.GONE);
 
-        setupFrebaseAuth();
+        setupFirebaseAuth();
         init();
     }
 
-    private void updateUI(FirebaseUser user){
-        if (user != null){
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
             mProgressBar.setVisibility(View.GONE);
             mSigningUp.setVisibility(View.GONE);
         } else {
@@ -96,23 +96,21 @@ public class SignUpActivity extends AppCompatActivity {
     ------------------------------------------ Firebase --------------------------------------------
      */
 
-    private void init(){
+    private void init() {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: signin in new user");
 
                 email = mEmail.getText().toString().trim();
-                username = mFullName.getText().toString().trim();
+                username = mUsername.getText().toString().trim();
                 password = mPassword.getText().toString().trim();
 
                 if (email.isEmpty() && username.isEmpty() && password.isEmpty()) {
                     Toast.makeText(mContext, "Fields can't be empty.", Toast.LENGTH_SHORT).show();
                 } else {
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mSigningUp.setVisibility(View.VISIBLE);
-
-                    createAccount(email, password);
+                    updateUI(null);
+                    firebaseMethods.createAccount(email, password, username);
 
                 }
 
@@ -124,45 +122,18 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating to login screen.");
-                Intent intent = new Intent(mContext, LoginActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
     }
 
-    private void createAccount(String email, String password){
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            Toast.makeText(mContext, "Authentication success.",
-                                    Toast.LENGTH_SHORT).show();
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                            finish();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(mContext, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-
-                        // ...
-                    }
-                });
-
-    }
 
     /**
      * setup firebase auth object.
      */
 
-    private void setupFrebaseAuth() {
-        Log.d(TAG, "setupFrebaseAuth: setting up firebase auth.");
+    private void setupFirebaseAuth() {
+        Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabse = FirebaseDatabase.getInstance();
@@ -178,8 +149,9 @@ public class SignUpActivity extends AppCompatActivity {
                     mRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                             //1st check: make sure username is not already in use.
-                            if (firebaseMethods.checkIfUsernameExists(username, dataSnapshot )){
+                            if (firebaseMethods.checkIfUsernameExists(username, dataSnapshot)) {
                                 append = mRef.push().getKey().substring(3, 10);
                                 Log.d(TAG, "onDataChange: username already exists. Appending random string to name: " + append);
                             }
@@ -189,6 +161,8 @@ public class SignUpActivity extends AppCompatActivity {
                             firebaseMethods.addNewUser(email, username, "", "", "");
                             Toast.makeText(mContext, "Sign Up Successful. Sending verification email.", Toast.LENGTH_SHORT).show();
 
+                            // sign out user after successful sign up for email verification
+                            mAuth.signOut();
 
                         }
 
@@ -197,9 +171,11 @@ public class SignUpActivity extends AppCompatActivity {
 
                         }
                     });
-                }
 
-                else
+                    //moving back to login screen after successful sign up.
+                    finish();
+
+                } else
                     Log.d(TAG, "onAuthStateChanged: signed out");
             }
         };
@@ -212,7 +188,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         mAuth.addAuthStateListener(mAuthStateListener);
-        //updateUI(currentUser);
+
     }
 
     @Override

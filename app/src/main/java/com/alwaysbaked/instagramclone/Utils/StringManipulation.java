@@ -6,7 +6,7 @@ public class StringManipulation {
         return username.replace(".", " ");
     }
 
-    public static String condenseUsrname(String username){
-        return username.replace("", ".");
+    public static String condenseUsername(String username){
+        return username.replace(" ", ".");
     }
 }

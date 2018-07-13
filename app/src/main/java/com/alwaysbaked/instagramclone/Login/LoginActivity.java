@@ -92,9 +92,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (email.isEmpty() && password.isEmpty()) {
                     Toast.makeText(mContext, "Fields can't be empty.", Toast.LENGTH_SHORT).show();
                 } else {
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mAuthentication.setVisibility(View.VISIBLE);
-
+                    updateUI(null);
                     signIn(email, password);
 
                 }
@@ -122,18 +120,30 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void signIn(String email, String password) {
+    private void signIn(final String email, final String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            Toast.makeText(mContext, "Authentication success.",
-                                    Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
+                            try {
+                                if (user.isEmailVerified()) {
+                                    Log.d(TAG, "onComplete: email verified");
+                                    Intent intent = new Intent(mContext, HomeActivity.class);
+                                    startActivity(intent);
+                                }else {
+                                    Toast.makeText(mContext, "Verify email to sign in.", Toast.LENGTH_SHORT).show();
+                                    updateUI(user);
+                                    mAuth.signOut();
+                                }
+
+
+                            }catch (NullPointerException e) {
+                                Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage());
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
