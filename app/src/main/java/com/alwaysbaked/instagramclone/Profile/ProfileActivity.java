@@ -1,27 +1,18 @@
 package com.alwaysbaked.instagramclone.Profile;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.alwaysbaked.instagramclone.R;
-import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
-import com.alwaysbaked.instagramclone.Utils.GridImageAdapter;
-import com.alwaysbaked.instagramclone.Utils.UniversalImageLoader;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,15 +43,25 @@ public class ProfileActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
-        setupBottomNavigationView();
+        /*setupBottomNavigationView();
         setupToolbar();
         setupActivityWidgets();
         setProfilePhoto();
 
-        tempGridSetup();
+        tempGridSetup();*/
     }
 
-    private void tempGridSetup() {
+    private void init(){
+        Log.d(TAG, "init: inflating " + getString(R.string.profile_fragment));
+
+        ProfileFragment fragment = new ProfileFragment();
+        FragmentTransaction transaction = ProfileActivity.this.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(getString(R.string.profile_fragment));
+        transaction.commit();
+    }
+
+   /* private void tempGridSetup() {
         List<String> imgURLs = new ArrayList<>();
         imgURLs.add("https://images4.alphacoders.com/678/thumb-1920-678317.jpg");
         imgURLs.add("https://images6.alphacoders.com/418/thumb-1920-418342.jpg");
@@ -110,9 +111,9 @@ public class ProfileActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.GONE);
     }
 
-    /**
+    *//**
      * responsible for setting up profile toolbar
-     */
+     *//*
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
@@ -129,9 +130,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-    /**
+    *//**
      * BottomNavigationView setup
-     */
+     *//*
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
@@ -141,5 +142,5 @@ public class ProfileActivity extends AppCompatActivity {
         menuItem.setChecked(true);
 
     }
-
+*/
 }
