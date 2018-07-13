@@ -2,18 +2,20 @@ package com.alwaysbaked.instagramclone.Models;
 
 public class User {
     private String user_id;
-    private String phone_number;
+    private long phone_number;
     private String email;
     private String username;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "user_id='" + user_id + '\'' +
-                ", phone_number='" + phone_number + '\'' +
-                ", email='" + email + '\'' +
-                ", username='" + username + '\'' +
-                '}';
+    public User() {
+
+    }
+
+    public User(String user_id, long phone_number, String email, String username) {
+
+        this.user_id = user_id;
+        this.phone_number = phone_number;
+        this.email = email;
+        this.username = username;
     }
 
     public String getUser_id() {
@@ -24,11 +26,11 @@ public class User {
         this.user_id = user_id;
     }
 
-    public String getPhone_number() {
+    public long getPhone_number() {
         return phone_number;
     }
 
-    public void setPhone_number(String phone_number) {
+    public void setPhone_number(long phone_number) {
         this.phone_number = phone_number;
     }
 
@@ -48,15 +50,13 @@ public class User {
         this.username = username;
     }
 
-    public User() {
-
-    }
-
-    public User(String user_id, String phone_number, String email, String username) {
-
-        this.user_id = user_id;
-        this.phone_number = phone_number;
-        this.email = email;
-        this.username = username;
+    @Override
+    public String toString() {
+        return "User{" +
+                "user_id='" + user_id + '\'' +
+                ", phone_number='" + phone_number + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                '}';
     }
 }

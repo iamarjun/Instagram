@@ -54,6 +54,8 @@ public class HomeActivity extends AppCompatActivity {
 
         setupBottomNavigationView();
         setupViewPager();
+
+        //mAuth.signOut();
     }
 
     private void initImageLoader() {
