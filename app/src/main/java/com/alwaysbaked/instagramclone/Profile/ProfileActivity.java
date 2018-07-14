@@ -21,7 +21,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
     private static final int ACTIVITY_NUMBER = 4;
     private static final int NUM_GRID_COLUMNS = 3;
-    @BindView(R.id.bottomNavViewBar)
+   /* @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
     @BindView(R.id.profileToolBar)
     Toolbar toolbar;
@@ -34,13 +34,15 @@ public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.profileProgressBar)
     ProgressBar mProgressBar;
     private Context mContext = ProfileActivity.this;
-
+*/
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         Log.d(TAG, "onCreate: staring.");
         ButterKnife.bind(this);
+
+        init();
 
 
         /*setupBottomNavigationView();
