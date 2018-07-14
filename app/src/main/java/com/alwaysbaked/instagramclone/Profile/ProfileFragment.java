@@ -69,6 +69,10 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.tvWebsite)
     TextView mWebsite;
 
+    @BindView(R.id.tvEditProfile)
+    TextView mEditProfile;
+
+
 
     @BindView(R.id.profileProgressBar)
     ProgressBar mProgressBar;
@@ -102,6 +106,18 @@ public class ProfileFragment extends Fragment {
         setupToolbar(); 
         setupBottomNavigationView();
         setupFrebaseAuth();
+
+        mEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating to " + mContext.getString(R.string.edit_profile_fragment));
+                Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+                intent.putExtra(getString(R.string.calling_activity), getString(R.string.profile_activity));
+                startActivity(intent);
+            }
+        });
+
+
         return view;
     }
 
