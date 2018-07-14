@@ -25,7 +25,7 @@ public class UniversalImageLoader {
     }
 
     /**
-     * this method can be used to set images that re static. it an't be used if the images are'nt
+     * this method can be used to set images that are static. it can't be used if the images are'nt
      * being changes in the fragment/activity - OR if they are being set in a list or a grid.
      *
      * @param imgURL

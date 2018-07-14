@@ -25,6 +25,8 @@ import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.Models.UserSettings;
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
+import com.alwaysbaked.instagramclone.Utils.FirebaseMethods;
+import com.alwaysbaked.instagramclone.Utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,13 +44,14 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private static final int ACTIVITY_NUMBER = 4;
 
-    private Context mContext = getActivity();
+    private Context mContext;
 
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mRef;
+    private FirebaseMethods mFirebaseMethods;
 
 
     @BindView(R.id.tvUsername)
@@ -91,19 +94,34 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         Log.d(TAG, "onCreateView: started");
+        mContext = getActivity();
+        mFirebaseMethods = new FirebaseMethods(mContext);
 
         ButterKnife.bind(this, view);
 
-        setupToolbar();
+        setupToolbar(); 
         setupBottomNavigationView();
+        setupFrebaseAuth();
         return view;
     }
 
     private void setProfileWidget(UserSettings userSettings){
         Log.d(TAG, "setProfileWidget: settings widgets with data retrieved from firebase: " + userSettings.toString());
 
-        User user = new UserSettings().getUser();
-        UserAccountSettings settings = new UserSettings().getSettings();
+        //User user = userSettings().getUser();
+        UserAccountSettings settings = userSettings.getSettings();
+
+        UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
+        mDisplayName.setText(settings.getDisplay_name());
+        mUsername.setText(settings.getUsername());
+        mWebsite.setText(settings.getWebsite());
+        mDescription.setText(settings.getDescription());
+        mPosts.setText(String.valueOf(settings.getPosts()));
+        mFollowers.setText(String.valueOf(settings.getFollowers()));
+        mFollowing.setText(String.valueOf(settings.getFollowing()));
+
+        mProgressBar.setVisibility(View.GONE);
+
     }
 
     /**
@@ -166,9 +184,10 @@ public class ProfileFragment extends Fragment {
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onDataChange: settings user's data");
 
                 //retrieve user information from database.
-
+                setProfileWidget(mFirebaseMethods.getUserSettings(dataSnapshot));
 
 
                 //retrieve images for the user in question.
