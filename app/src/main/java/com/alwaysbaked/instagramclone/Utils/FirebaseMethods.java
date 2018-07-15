@@ -38,6 +38,10 @@ public class FirebaseMethods {
             userID = mAuth.getCurrentUser().getUid();
     }
 
+    /**
+     * update username in 'users's' and 'user_account_settings's' nodes
+     * @param username
+     */
     public void updateUsername(String username){
         Log.d(TAG, "updateUsername: updating username to " + username);
         mRef.child(mContext.getString(R.string.dbname_users))
@@ -49,6 +53,19 @@ public class FirebaseMethods {
                 .child(userID)
                 .child(mContext.getString(R.string.field_username))
                 .setValue(username);
+    }
+
+    /**
+     * update email in 'users's' node
+     * @param email
+     */
+    public void updateEmail(String email){
+        Log.d(TAG, "updateEmail: updating email to " + email);
+        mRef.child(mContext.getString(R.string.dbname_users))
+                .child(userID)
+                .child(mContext.getString(R.string.field_email))
+                .setValue(email);
+
     }
 
     public void createAccount(final String email, final String password, final String username) {

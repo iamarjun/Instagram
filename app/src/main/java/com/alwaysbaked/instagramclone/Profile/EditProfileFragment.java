@@ -20,8 +20,13 @@ import com.alwaysbaked.instagramclone.Models.UserSettings;
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.FirebaseMethods;
 import com.alwaysbaked.instagramclone.Utils.UniversalImageLoader;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,12 +38,71 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EditProfileFragment extends Fragment implements ConfirmDialogPassword.OnConfirmpasswordListener{
+public class EditProfileFragment extends Fragment implements ConfirmDialogPassword.OnConfirmpasswordListener {
 
     @Override
     public void confirmPassword(String password) {
         Log.d(TAG, "confirmPassword: got the passowrd: " + password);
+
+        // Get auth credentials from the user for re-authentication. The example below shows
+        // email and password credentials but there are multiple possible providers,
+        // such as GoogleAuthProvider or FacebookAuthProvider.
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(mAuth.getCurrentUser().getEmail(), password);
+
+        ///////////////// Prompt the user to re-provide their sign-in credentials
+        mAuth.getCurrentUser().reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: User re-authenticated.");
+
+                            ///////////////// check is email is not already present in the database
+                            mAuth.fetchSignInMethodsForEmail(mEmail.getText().toString()).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+
+                                    if (task.isSuccessful()) {
+
+                                        try {
+
+                                            if (task.getResult().getSignInMethods().size() == 1) {
+                                                Log.d(TAG, "onComplete: this email already in use");
+                                                Toast.makeText(getActivity(), "Email already in use", Toast.LENGTH_SHORT).show();
+
+                                            } else {
+                                                Log.d(TAG, "onComplete: that email is available.");
+
+                                                ///////////////// email not in use and update email
+                                                mAuth.getCurrentUser().updateEmail(mEmail.getText().toString())
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    Log.d(TAG, "User email address updated.");
+                                                                    mFirebaseMethods.updateEmail(mEmail.getText().toString());
+                                                                    Toast.makeText(getActivity(), "Email updated", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+                                                        });
+                                            }
+
+                                        } catch (NullPointerException e) {
+                                            Log.d(TAG, "onComplete: NullPointerException: " + e.getMessage());
+
+                                        }
+
+                                    }
+
+                                }
+                            });
+                        } else
+                            Log.d(TAG, "onComplete: User re-authentication failed.");
+                    }
+                });
     }
+
     private static final String TAG = "EditProfileFragment";
 
     @BindView(R.id.profile_photo)
@@ -117,7 +181,7 @@ public class EditProfileFragment extends Fragment implements ConfirmDialogPasswo
      * Retrieves the data saved in the widgets and submits it to the database
      * Before doing so it check sto make sure the username chosen is unique.
      */
-    private void saveProfileSettings(){
+    private void saveProfileSettings() {
         final String displayName = mDisplayName.getText().toString();
         final String username = mUsername.getText().toString();
         final String website = mWebsite.getText().toString();
@@ -155,7 +219,8 @@ public class EditProfileFragment extends Fragment implements ConfirmDialogPasswo
     }
 
     /**
-     *check if @patram username exists in database.
+     * check if @patram username exists in database.
+     *
      * @param username
      */
     private void checkIfUsernameExists(final String username) {
@@ -170,14 +235,14 @@ public class EditProfileFragment extends Fragment implements ConfirmDialogPasswo
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()){
+                if (!dataSnapshot.exists()) {
                     //add username
                     mFirebaseMethods.updateUsername(username);
                     Toast.makeText(getActivity(), "Username changed", Toast.LENGTH_SHORT).show();
 
                 }
-                for (DataSnapshot singleSnapshot: dataSnapshot.getChildren()){
-                    if (singleSnapshot.exists()){
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    if (singleSnapshot.exists()) {
                         Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH " + singleSnapshot.getValue(User.class).getUsername());
                         Toast.makeText(getActivity(), "That username already exists", Toast.LENGTH_SHORT).show();
                     }
@@ -192,7 +257,7 @@ public class EditProfileFragment extends Fragment implements ConfirmDialogPasswo
 
     }
 
-    private void setProfileWidget(UserSettings userSettings){
+    private void setProfileWidget(UserSettings userSettings) {
         Log.d(TAG, "setProfileWidget: settings widgets with data retrieved from firebase: " + userSettings.toString());
 
         mUserSettings = userSettings;
