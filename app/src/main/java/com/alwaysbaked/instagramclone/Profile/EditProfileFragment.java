@@ -33,7 +33,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EditProfileFragment extends Fragment {
+public class EditProfileFragment extends Fragment implements ConfirmDialogPassword.OnConfirmpasswordListener{
+
+    @Override
+    public void confirmPassword(String password) {
+        Log.d(TAG, "confirmPassword: got the passowrd: " + password);
+    }
     private static final String TAG = "EditProfileFragment";
 
     @BindView(R.id.profile_photo)
@@ -135,6 +140,7 @@ public class EditProfileFragment extends Fragment {
 
             ConfirmDialogPassword dialogPassword = new ConfirmDialogPassword();
             dialogPassword.show(getFragmentManager(), getString(R.string.confirm_password_dialog));
+            dialogPassword.setTargetFragment(EditProfileFragment.this, 1);
 
 
             //#2 Check if the email already registered.
@@ -264,4 +270,6 @@ public class EditProfileFragment extends Fragment {
         if (mAuthStateListener != null)
             mAuth.removeAuthStateListener(mAuthStateListener);
     }
+
+
 }
