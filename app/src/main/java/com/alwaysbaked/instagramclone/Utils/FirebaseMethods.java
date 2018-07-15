@@ -38,6 +38,19 @@ public class FirebaseMethods {
             userID = mAuth.getCurrentUser().getUid();
     }
 
+    public void updateUsername(String username){
+        Log.d(TAG, "updateUsername: updating username to " + username);
+        mRef.child(mContext.getString(R.string.dbname_users))
+                .child(userID)
+                .child(mContext.getString(R.string.field_username))
+                .setValue(username);
+
+        mRef.child(mContext.getString(R.string.dbname_users_account_settings))
+                .child(userID)
+                .child(mContext.getString(R.string.field_username))
+                .setValue(username);
+    }
+
     public void createAccount(final String email, final String password, final String username) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -68,7 +81,7 @@ public class FirebaseMethods {
 
     }
 
-    public boolean checkIfUsernameExists(String username, DataSnapshot dataSnapshot) {
+   /* public boolean checkIfUsernameExists(String username, DataSnapshot dataSnapshot) {
         Log.d(TAG, "checkIfUsernameExists: checking if " + username + " already exists.");
 
         User user = new User();
@@ -87,7 +100,7 @@ public class FirebaseMethods {
             }
         }
         return false;
-    }
+    }*/
 
     public void sendVerificationEmail() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alwaysbaked.instagramclone.Models.User;
 import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
@@ -24,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
@@ -65,6 +67,9 @@ public class EditProfileFragment extends Fragment {
     private FirebaseMethods mFirebaseMethods;
     private String userID;
 
+    //variables
+    private UserSettings mUserSettings;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -88,6 +93,16 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+        //checkmark to save changes
+
+        mSaveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: attempting to save changes.");
+                saveProfileSettings();
+            }
+        });
+
 
         return view;
     }
@@ -108,22 +123,13 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                User user = new User();
-                for (DataSnapshot ds: dataSnapshot.child(getString(R.string.dbname_users)).getChildren()){
-                    if (ds.getKey().equals(userID)){
-                        user.setUsername(ds.getValue(User.class).getUsername());
-                    }
-                }
-
-                Log.d(TAG, "onDataChange: CURRENT USERNAME: " + user.getUsername());
-
                 //case 1: user did not change their username.
+                if (!mUserSettings.getUser().getUsername().equals(username)) {
 
-                if (user.getUsername().equals(username)) {
+                    checkIfUsernameExists(username);
 
                 }
                 //case 2: user changed their username therefore we need to check uniqueness.
-
                 else {
 
                 }
@@ -137,8 +143,48 @@ public class EditProfileFragment extends Fragment {
 
     }
 
+    /**
+     *check if @patram username exists in database.
+     * @param username
+     */
+    private void checkIfUsernameExists(final String username) {
+        Log.d(TAG, "checkIfUsernameExists: checking if " + username + " already exists");
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference
+                .child(getString(R.string.dbname_users))
+                .orderByChild(getString(R.string.field_username))
+                .equalTo(username);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()){
+                    //add username
+                    mFirebaseMethods.updateUsername(username);
+                    Toast.makeText(getActivity(), "Username changed", Toast.LENGTH_SHORT).show();
+
+                }
+                for (DataSnapshot singleSnapshot: dataSnapshot.getChildren()){
+                    if (singleSnapshot.exists()){
+                        Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH " + singleSnapshot.getValue(User.class).getUsername());
+                        Toast.makeText(getActivity(), "That username already exists", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void setProfileWidget(UserSettings userSettings){
         Log.d(TAG, "setProfileWidget: settings widgets with data retrieved from firebase: " + userSettings.toString());
+
+        mUserSettings = userSettings;
 
         //User user = userSettings().getUser();
         UserAccountSettings settings = userSettings.getSettings();
