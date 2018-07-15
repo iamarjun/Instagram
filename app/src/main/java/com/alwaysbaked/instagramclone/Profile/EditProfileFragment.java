@@ -212,9 +212,27 @@ public class EditProfileFragment extends Fragment implements ConfirmDialogPasswo
             //#3 Change the email
             //        - submit the new email to the database and verify.
 
-
         }
 
+        // update display name
+        if (!mUserSettings.getSettings().getDisplay_name().equals(displayName)){
+            mFirebaseMethods.updateUserSettings(displayName, null, null, 0);
+        }
+
+        // update website
+        if (!mUserSettings.getSettings().getWebsite().equals(website)){
+            mFirebaseMethods.updateUserSettings(null, website, null, 0);
+        }
+
+        // update description
+        if (!mUserSettings.getSettings().getDescription().equals(description)){
+            mFirebaseMethods.updateUserSettings(null, null, description, 0);
+        }
+
+        // update phone number
+        if (!Long.valueOf(mUserSettings.getUser().getPhone_number()).equals(phoneNumber)){
+            mFirebaseMethods.updateUserSettings(null, null, null, phoneNumber);
+        }
 
     }
 

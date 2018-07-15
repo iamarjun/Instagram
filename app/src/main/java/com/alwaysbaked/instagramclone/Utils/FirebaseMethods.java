@@ -68,6 +68,38 @@ public class FirebaseMethods {
 
     }
 
+    public void updateUserSettings(String displayName, String website, String description, long phoneNumber){
+        Log.d(TAG, "updateUserSettings: updating user settings to " + displayName + " " + website + " " + description + " " + phoneNumber + " ");
+
+        if (displayName != null)
+            //updating display name
+            mRef.child(mContext.getString(R.string.dbname_users_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_display_name))
+                    .setValue(displayName);
+
+        if (website != null)
+            //updating website
+            mRef.child(mContext.getString(R.string.dbname_users_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_website))
+                    .setValue(website);
+
+        if (description != null)
+            //updating description
+            mRef.child(mContext.getString(R.string.dbname_users_account_settings))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_description))
+                    .setValue(description);
+
+        if (phoneNumber != 0)
+            //updating phone number
+            mRef.child(mContext.getString(R.string.dbname_users))
+                    .child(userID)
+                    .child(mContext.getString(R.string.field_phone_number))
+                    .setValue(phoneNumber);
+    }
+
     public void createAccount(final String email, final String password, final String username) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
