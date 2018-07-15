@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alwaysbaked.instagramclone.Dialogs.ConfirmDialogPassword;
 import com.alwaysbaked.instagramclone.Models.User;
 import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.Models.UserSettings;
@@ -119,27 +120,31 @@ public class EditProfileFragment extends Fragment {
         final String email = mEmail.getText().toString();
         final long phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
 
-        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                //case 1: user did not change their username.
-                if (!mUserSettings.getUser().getUsername().equals(username)) {
+        //case 1: if the user made changes to the username.
+        if (!mUserSettings.getUser().getUsername().equals(username)) {
 
-                    checkIfUsernameExists(username);
+            checkIfUsernameExists(username);
 
-                }
-                //case 2: user changed their username therefore we need to check uniqueness.
-                else {
+        }
+        //case 2: if the user made changes to their email.
+        if (!mUserSettings.getUser().getEmail().equals(email)) {
 
-                }
-            }
+            //#1 Re-Authenticate
+            //        -confirm the current email and password.
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            ConfirmDialogPassword dialogPassword = new ConfirmDialogPassword();
+            dialogPassword.show(getFragmentManager(), getString(R.string.confirm_password_dialog));
 
-            }
-        });
+
+            //#2 Check if the email already registered.
+            //        -'fetchProvidersForEmail(String email)'
+            //#3 Change the email
+            //        - submit the new email to the database and verify.
+
+
+        }
+
 
     }
 
