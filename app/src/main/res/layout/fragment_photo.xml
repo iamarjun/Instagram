@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/launchCamera"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

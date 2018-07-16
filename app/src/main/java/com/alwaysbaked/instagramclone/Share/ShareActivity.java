@@ -51,6 +51,19 @@ public class ShareActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * returns current tab number.
+     * 0 - gallery
+     * 1 - photo
+     * @return
+     */
+    public int getCurrentTabNumber(){
+        return mViewPager.getCurrentItem();
+    }
+
+    /**
+     * setup viewpager for managing tabs
+     */
     private void setupViewPager(){
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new GalleryFragment());
@@ -96,7 +109,7 @@ public class ShareActivity extends AppCompatActivity {
      * @param permission
      * @return
      */
-    private boolean checkPermissions(String permission) {
+    public boolean checkPermissions(String permission) {
         Log.d(TAG, "checkPermissions: checking permission: " + permission);
 
         int permissionRequest = ActivityCompat.checkSelfPermission(mContext, permission);
