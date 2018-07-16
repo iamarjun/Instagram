@@ -34,9 +34,6 @@ public class ShareActivity extends AppCompatActivity {
     ViewPager mViewPager;
     @BindView(R.id.tabsBottom)
     TabLayout mTabLayout;
-    @BindView(R.id.bottomNavViewBar)
-    BottomNavigationViewEx bottomNavigationViewEx;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,14 +49,12 @@ public class ShareActivity extends AppCompatActivity {
             verifyPermissions(Permissions.PERMISSIONS);
         }
 
-        setupBottomNavigationView();
-
     }
 
     private void setupViewPager(){
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-//        adapter.addFragment(new GalleryFragment());
-//        adapter.addFragment(new PhotoFragment());
+        adapter.addFragment(new GalleryFragment());
+        adapter.addFragment(new PhotoFragment());
 
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -115,16 +110,4 @@ public class ShareActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * BottomNavigationView setup
-     */
-    public void setupBottomNavigationView() {
-        Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(mContext, bottomNavigationViewEx);
-        Menu menu = bottomNavigationViewEx.getMenu();
-        MenuItem menuItem = menu.getItem(ACTIVITY_NUMBER);
-        menuItem.setChecked(true);
-
-    }
 }
