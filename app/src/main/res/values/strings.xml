@@ -29,8 +29,13 @@
     <!--tab names-->
     <string name="gallery">GALLERY</string>
     <string name="photo">PHOTO</string>
+
+    <!--Strings-->
     <string name="string_open_camera">Open Camera</string>
     <string name="string_next">Next</string>
+    <string name="string_caption">Write a caption…</string>
+    <string name="string_share">Share</string>
+    <string name="string_share_to">Share to</string>
 
 
 </resources>
