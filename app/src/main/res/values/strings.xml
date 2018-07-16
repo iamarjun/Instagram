@@ -24,5 +24,10 @@
 
     <!--Activity Names-->
     <string name="profile_activity">Profile Activity</string>
+    
+    <!--tab names-->
+    <string name="gallery">GALLERY</string>
+    <string name="photo">PHOTO</string>
+
 
 </resources>
