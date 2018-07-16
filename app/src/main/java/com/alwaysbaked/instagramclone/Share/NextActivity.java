@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.FirebaseMethods;
@@ -51,7 +52,8 @@ public class NextActivity extends AppCompatActivity {
     private FirebaseMethods mFirebaseMethods;
 
     //variables
-    private int imaeCount = 0;
+    private int imageCount = 0;
+    private String imgURL;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +79,9 @@ public class NextActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: attempting to share the image to the feed.");
+                Toast.makeText(mContext, "Uploading image to firebase cloud stroage", Toast.LENGTH_SHORT).show();
+                String caption = mCaption.getText().toString();
+                mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgURL);
 
             }
         });
@@ -107,7 +112,7 @@ public class NextActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRef = mFirebaseDatabase.getReference();
-        Log.d(TAG, "setupFirebaseAuth: image count: " + imaeCount);
+        Log.d(TAG, "setupFirebaseAuth: image count: " + imageCount);
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -124,8 +129,8 @@ public class NextActivity extends AppCompatActivity {
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                imaeCount = mFirebaseMethods.getImageCount(dataSnapshot);
-                Log.d(TAG, "onDataChange: image count: " + imaeCount);
+                imageCount = mFirebaseMethods.getImageCount(dataSnapshot);
+                Log.d(TAG, "onDataChange: image count: " + imageCount);
 
             }
 
