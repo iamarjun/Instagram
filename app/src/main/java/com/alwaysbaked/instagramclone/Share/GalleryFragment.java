@@ -1,5 +1,6 @@
 package com.alwaysbaked.instagramclone.Share;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -53,6 +54,7 @@ public class GalleryFragment extends Fragment {
 
     //variables
     private ArrayList<String> directories;
+    private String mSelectedImage;
 
     @Nullable
     @Override
@@ -80,6 +82,11 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating to final share screen.");
+
+                Intent intent = new Intent(getActivity(), NextActivity.class);
+                intent.putExtra(getString(R.string.select_image), mSelectedImage);
+                startActivity(intent);
+
             }
         });
 
@@ -96,10 +103,17 @@ public class GalleryFragment extends Fragment {
             directories = FileSearch.getDirectoryPaths(filePaths.PICTURES);
         }
 
+        ArrayList<String> directoryNames = new ArrayList<>();
+        for (int i = 0; i < directories.size() ; i++) {
+            int index = directories.get(i).lastIndexOf("/") + 1;
+            String string = directories.get(i).substring(index);
+            directoryNames.add(string);
+        }
+
         directories.add(filePaths.CAMERA);
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_spinner_item, directories);
+                android.R.layout.simple_spinner_item, directoryNames);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mDirectorySpinner.setAdapter(arrayAdapter);
@@ -136,12 +150,14 @@ public class GalleryFragment extends Fragment {
 
         //set the first image to be displayed when the activity fragment view is inflated
         setImage(imgURLs.get(0), mGalleryImage, mAppend);
+        mSelectedImage = imgURLs.get(0);
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "onItemClick: selected an image " + imgURLs.get(position));
                 setImage(imgURLs.get(position), mGalleryImage, mAppend);
+                mSelectedImage = imgURLs.get(position);
             }
         });
     }
