@@ -9,10 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.alwaysbaked.instagramclone.R;
@@ -53,6 +50,9 @@ public class NextActivity extends AppCompatActivity {
     private DatabaseReference mRef;
     private FirebaseMethods mFirebaseMethods;
 
+    //variables
+    private int imaeCount = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +61,9 @@ public class NextActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        setupFrebaseAuth();
+        mFirebaseMethods = new FirebaseMethods(mContext);
+
+        setupFirebaseAuth();
 
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +81,8 @@ public class NextActivity extends AppCompatActivity {
             }
         });
 
+        setImage();
+
     }
 
     /**
@@ -86,8 +90,7 @@ public class NextActivity extends AppCompatActivity {
      */
     private void setImage(){
         Intent intent = getIntent();
-        if (intent.getStringExtra(getString(R.string.select_image)) != null)
-            UniversalImageLoader.setImage(intent.getStringExtra(getString(R.string.select_image)), mShareImage, null, mAppend);
+        UniversalImageLoader.setImage(intent.getStringExtra(getString(R.string.select_image)), mShareImage, null, mAppend);
     }
 
      /*
@@ -98,12 +101,13 @@ public class NextActivity extends AppCompatActivity {
      * setup firebase auth object.
      */
 
-    private void setupFrebaseAuth() {
-        Log.d(TAG, "setupFrebaseAuth: setting up firebase auth.");
+    private void setupFirebaseAuth() {
+        Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mRef = mFirebaseDatabase.getReference();
+        Log.d(TAG, "setupFirebaseAuth: image count: " + imaeCount);
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -120,7 +124,8 @@ public class NextActivity extends AppCompatActivity {
         mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onDataChange: settings user's data");
+                imaeCount = mFirebaseMethods.getImageCount(dataSnapshot);
+                Log.d(TAG, "onDataChange: image count: " + imaeCount);
 
             }
 
