@@ -1,5 +1,6 @@
 package com.alwaysbaked.instagramclone.Profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.alwaysbaked.instagramclone.Models.User;
 import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.Models.UserSettings;
 import com.alwaysbaked.instagramclone.R;
+import com.alwaysbaked.instagramclone.Share.ShareActivity;
 import com.alwaysbaked.instagramclone.Utils.FirebaseMethods;
 import com.alwaysbaked.instagramclone.Utils.UniversalImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -142,7 +144,7 @@ public class EditProfileFragment extends Fragment implements ConfirmDialogPasswo
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
+    public View onCreateView(@NonNull final LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_editprofile, container, false);
@@ -170,6 +172,16 @@ public class EditProfileFragment extends Fragment implements ConfirmDialogPasswo
             public void onClick(View v) {
                 Log.d(TAG, "onClick: attempting to save changes.");
                 saveProfileSettings();
+            }
+        });
+
+        mChangeProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: changing profile photot.");
+                Intent intent = new Intent(getActivity(), ShareActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //
+                getActivity().startActivity(intent);
             }
         });
 
