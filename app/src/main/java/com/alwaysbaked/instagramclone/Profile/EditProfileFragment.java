@@ -182,6 +182,7 @@ public class EditProfileFragment extends Fragment implements ConfirmDialogPasswo
                 Intent intent = new Intent(getActivity(), ShareActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //
                 getActivity().startActivity(intent);
+                getActivity().finish();
             }
         });
 

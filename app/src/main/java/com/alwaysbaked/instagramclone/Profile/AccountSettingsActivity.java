@@ -49,7 +49,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @BindView(R.id.backArrow)
     ImageView backArrow;
     private Context mContext = AccountSettingsActivity.this;
-    private SectionsStatePagerAdapter pagerAdapter;
+    public SectionsStatePagerAdapter pagerAdapter;
 
 
 
@@ -105,7 +105,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     }
 
-    private void setViewPager(int fragmentNumber) {
+    public void setViewPager(int fragmentNumber) {
         mRelativeLayout.setVisibility(View.GONE);
         Log.d(TAG, "setViewPager: navigating to fragment #" + fragmentNumber);
         mViewPager.setAdapter(pagerAdapter);
