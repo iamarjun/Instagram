@@ -28,7 +28,9 @@
     <!--Intent Extras-->
     <string name="calling_activity">Calling Activity</string>
     <string name="select_image">Selected Image</string>
+    <string name="select_bitmap">Selected Bitmap</string>
     <string name="return_to_fragment">Return To Fragment</string>
+
 
     <!--Activity Names-->
     <string name="profile_activity">Profile Activity</string>

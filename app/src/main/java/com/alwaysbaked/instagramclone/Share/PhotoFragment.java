@@ -1,6 +1,7 @@
 package com.alwaysbaked.instagramclone.Share;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.alwaysbaked.instagramclone.Profile.AccountSettingsActivity;
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.Permissions;
 
@@ -64,12 +66,36 @@ public class PhotoFragment extends Fragment {
         return view;
     }
 
+    private boolean isRootTask() {
+        return ((ShareActivity) getActivity()).getTask() == 0;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CAMERA_REQUEST_CODE) {
             Log.d(TAG, "onActivityResult: photo captured");
+
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+
+            if (isRootTask()) {
+
+            } else {
+                try {
+                    Log.d(TAG, "onActivityResult: received image from camera: " + bitmap);
+
+                    Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+                    intent.putExtra(getString(R.string.select_bitmap), bitmap);
+                    intent.putExtra(getString(R.string.return_to_fragment), getString(R.string.edit_profile_fragment));
+                    startActivity(intent);
+                    getActivity().finish();
+
+                } catch (NullPointerException e) {
+                    Log.d(TAG, "onActivityResult: NullPointerException: " + e.getMessage());
+
+                }
+            }
 
         }
     }

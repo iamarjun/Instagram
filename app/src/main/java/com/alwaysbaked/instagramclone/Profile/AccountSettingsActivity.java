@@ -2,8 +2,8 @@ package com.alwaysbaked.instagramclone.Profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -21,13 +21,6 @@ import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
 import com.alwaysbaked.instagramclone.Utils.FirebaseMethods;
 import com.alwaysbaked.instagramclone.Utils.SectionsStatePagerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
@@ -50,7 +43,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
     ImageView backArrow;
     private Context mContext = AccountSettingsActivity.this;
     public SectionsStatePagerAdapter pagerAdapter;
-
 
 
     @Override
@@ -76,23 +68,42 @@ public class AccountSettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void getIncomingIntent(){
+    private void getIncomingIntent() {
         Intent intent = getIntent();
 
-        //if there is an imageURl attached as an extra, then it was chosen from the galley/photo fragment.
-        if (intent.hasExtra(getString(R.string.select_image))) {
+        if (intent.hasExtra(getString(R.string.select_image)) || (intent.hasExtra(getString(R.string.select_bitmap)))) {
+
+            //if there is an imageURl attached as an extra, then it was chosen from the galley/photo fragment.
+
             Log.d(TAG, "getIncomingIntent: new incoming imageURl");
             if (intent.getStringExtra(getString(R.string.return_to_fragment)).equals(getString(R.string.edit_profile_fragment))) {
-                //set the new profile picture
-                FirebaseMethods mFirebaseMethods = new FirebaseMethods(mContext);
-                mFirebaseMethods.uploadNewPhoto(getString(R.string.profile_photo),
-                        null,
-                        0,
-                        intent.getStringExtra(getString(R.string.select_image)));
+
+                if (intent.hasExtra(getString(R.string.select_image))) {
+                    //set the new profile picture from gallery fragment
+                    FirebaseMethods mFirebaseMethods = new FirebaseMethods(mContext);
+                    mFirebaseMethods.uploadNewPhoto(getString(R.string.profile_photo),
+                            null,
+                            0,
+                            intent.getStringExtra(getString(R.string.select_image)),
+                            null);
+
+                } else if (intent.hasExtra(getString(R.string.select_bitmap))) {
+                    //set the new profile picture from photo fragment
+                    FirebaseMethods mFirebaseMethods = new FirebaseMethods(mContext);
+                    mFirebaseMethods.uploadNewPhoto(getString(R.string.profile_photo),
+                            null,
+                            0,
+                            null,
+                            (Bitmap) intent.getParcelableExtra(getString(R.string.select_bitmap)));
+
+                }
+
             }
         }
 
-        if (intent.hasExtra(getString(R.string.calling_activity))){
+
+
+        if (intent.hasExtra(getString(R.string.calling_activity))) {
             Log.d(TAG, "getIncomingIntent: received incoming intent from " + getString(R.string.profile_activity));
             setViewPager(pagerAdapter.getFragmentNumber(getString(R.string.edit_profile_fragment)));
         }

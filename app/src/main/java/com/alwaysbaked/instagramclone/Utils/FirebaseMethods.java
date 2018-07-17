@@ -63,7 +63,7 @@ public class FirebaseMethods {
             userID = mAuth.getCurrentUser().getUid();
     }
 
-    public void uploadNewPhoto(final String photoType, final String caption, int imageCount, final String imgURL) {
+    public void uploadNewPhoto(final String photoType, final String caption, int imageCount, final String imgURL, Bitmap bitmap) {
         Log.d(TAG, "uploadNewPhoto: attempting to upload a new photo to cloud");
 
         FilePaths filePaths = new FilePaths();
@@ -76,7 +76,9 @@ public class FirebaseMethods {
                     .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (imageCount + 1));
 
             //convert image url to bitmap
-            Bitmap bitmap = ImageManager.getBitmap(imgURL);
+            if (bitmap == null)
+                bitmap = ImageManager.getBitmap(imgURL);
+
             byte[] bytes = ImageManager.getBytesFromBitmap(bitmap, 100);
 
             UploadTask uploadTask;
@@ -132,17 +134,14 @@ public class FirebaseMethods {
         } else if (photoType.equals(mContext.getString(R.string.profile_photo))) {
             Log.d(TAG, "uploadNewPhoto: uploading new PROFILE photo");
 
-            ((AccountSettingsActivity)mContext).setViewPager(
-                    ((AccountSettingsActivity)mContext).pagerAdapter
-                            .getFragmentNumber(mContext.getString(R.string.edit_profile_fragment)));
-
-
             String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
             final StorageReference storageReference = mStorageReference
                     .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/profile_photo");
 
             //convert image url to bitmap
-            Bitmap bitmap = ImageManager.getBitmap(imgURL);
+            if (bitmap == null)
+                bitmap = ImageManager.getBitmap(imgURL);
+
             byte[] bytes = ImageManager.getBytesFromBitmap(bitmap, 100);
 
             UploadTask uploadTask;
@@ -168,6 +167,10 @@ public class FirebaseMethods {
                     });
 
                     Toast.makeText(mContext, "Upload Success", Toast.LENGTH_SHORT).show();
+
+                    ((AccountSettingsActivity)mContext).setViewPager(
+                            ((AccountSettingsActivity)mContext).pagerAdapter
+                                    .getFragmentNumber(mContext.getString(R.string.edit_profile_fragment)));
 
                 }
             }).addOnFailureListener(new OnFailureListener() {

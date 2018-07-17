@@ -81,7 +81,7 @@ public class NextActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: attempting to share the image to the feed.");
                 Toast.makeText(mContext, "Uploading image to firebase cloud stroage", Toast.LENGTH_SHORT).show();
                 String caption = mCaption.getText().toString();
-                mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgURL);
+                mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgURL, null);
 
             }
         });
