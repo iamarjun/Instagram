@@ -10,6 +10,7 @@ public class FilePaths {
     public String CAMERA = ROOT_DIR + "/DCIM/Camera";
     public String PICTURES = ROOT_DIR + "/Pictures";
 
+    //firebase storage path
     public String FIREBASE_IMAGE_STORAGE = "photos/users/";
-    }
+
 }

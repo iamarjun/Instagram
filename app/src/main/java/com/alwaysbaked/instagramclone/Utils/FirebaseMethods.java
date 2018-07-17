@@ -1,6 +1,7 @@
 package com.alwaysbaked.instagramclone.Utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class FirebaseMethods {
     private static final String TAG = "FirebaseMethods";
@@ -52,6 +54,14 @@ public class FirebaseMethods {
 
             String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
             StorageReference storageReference = mStorageReference.child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (imageCount + 1));
+
+            //convert image url to bitmap
+            Bitmap bitmap = ImageManager.getBitmap(imgURL);
+            byte[] bytes = ImageManager.getBytesFromBitmap(bitmap, 100);
+
+            UploadTask uploadTask = null;
+            uploadTask = storageReference.putBytes(bytes);
+
 
 
         } else if(photoType.equals(mContext.getString(R.string.new_photo))) {
