@@ -95,7 +95,8 @@ public class NextActivity extends AppCompatActivity {
      */
     private void setImage(){
         Intent intent = getIntent();
-        UniversalImageLoader.setImage(intent.getStringExtra(getString(R.string.select_image)), mShareImage, null, mAppend);
+        imgURL = intent.getStringExtra(getString(R.string.select_image));
+        UniversalImageLoader.setImage(imgURL, mShareImage, null, mAppend);
     }
 
      /*

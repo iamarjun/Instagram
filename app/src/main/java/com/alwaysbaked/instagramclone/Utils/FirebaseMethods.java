@@ -2,6 +2,7 @@ package com.alwaysbaked.instagramclone.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -11,6 +12,8 @@ import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.Models.UserSettings;
 import com.alwaysbaked.instagramclone.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,18 +22,25 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class FirebaseMethods {
     private static final String TAG = "FirebaseMethods";
+
+    //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseDatabase mFirebaseDatabse;
     private DatabaseReference mRef;
     private StorageReference mStorageReference;
     private String userID;
+
+
+    //variables
     private Context mContext;
+    private double mPhotoUploadProgress = 0;
 
 
     public FirebaseMethods(Context mContext) {
@@ -44,12 +54,12 @@ public class FirebaseMethods {
             userID = mAuth.getCurrentUser().getUid();
     }
 
-    public void uploadNewPhoto(String photoType, String caption, int imageCount, String imgURL){
+    public void uploadNewPhoto(final String photoType, String caption, int imageCount, String imgURL){
         Log.d(TAG, "uploadNewPhoto: attempting to upload a new photo to cloud");
 
         FilePaths filePaths = new FilePaths();
         //#1 new photo
-        if (photoType.equals(mContext.getString(R.string.profile_photo))) {
+        if (photoType.equals(mContext.getString(R.string.new_photo))) {
             Log.d(TAG, "uploadNewPhoto: uploading new photo");
 
             String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -59,12 +69,43 @@ public class FirebaseMethods {
             Bitmap bitmap = ImageManager.getBitmap(imgURL);
             byte[] bytes = ImageManager.getBytesFromBitmap(bitmap, 100);
 
-            UploadTask uploadTask = null;
+            UploadTask uploadTask;
             uploadTask = storageReference.putBytes(bytes);
 
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    //Uri firebaseURL = taskSnapshot.getDownloadUrl();
+                    Toast.makeText(mContext, "Upload Success", Toast.LENGTH_SHORT).show();
+
+                    //#1 add photo to the 'photo' node 'user_photos' node
+
+                    //#2 navigate to the main feed so that user can see the photo
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "onFailure: upload failed: " + e.getMessage());
+                    Toast.makeText(mContext, "Upload Failed", Toast.LENGTH_SHORT).show();
+
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = ((100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
+
+                    if (progress - 15 > mPhotoUploadProgress) {
+                        Toast.makeText(mContext, "Upload Progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                        mPhotoUploadProgress = progress;
+                    }
+
+                    Log.d(TAG, "onProgress: upload progress: " + progress + "% done");
+                }
+            });
 
 
-        } else if(photoType.equals(mContext.getString(R.string.new_photo))) {
+        } else if(photoType.equals(mContext.getString(R.string.profile_photo))) {
             Log.d(TAG, "uploadNewPhoto: uploading new profile photo");
 
         }
