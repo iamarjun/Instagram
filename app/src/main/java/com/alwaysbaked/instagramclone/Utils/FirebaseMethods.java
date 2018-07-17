@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alwaysbaked.instagramclone.Models.Photo;
 import com.alwaysbaked.instagramclone.Models.User;
 import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.Models.UserSettings;
@@ -25,6 +26,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class FirebaseMethods {
     private static final String TAG = "FirebaseMethods";
@@ -54,7 +60,7 @@ public class FirebaseMethods {
             userID = mAuth.getCurrentUser().getUid();
     }
 
-    public void uploadNewPhoto(final String photoType, String caption, int imageCount, String imgURL){
+    public void uploadNewPhoto(final String photoType, final String caption, int imageCount, final String imgURL){
         Log.d(TAG, "uploadNewPhoto: attempting to upload a new photo to cloud");
 
         FilePaths filePaths = new FilePaths();
@@ -75,10 +81,11 @@ public class FirebaseMethods {
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    //Uri firebaseURL = taskSnapshot.getDownloadUrl();
+                    Uri firebaseURI = taskSnapshot.getUploadSessionUri();
                     Toast.makeText(mContext, "Upload Success", Toast.LENGTH_SHORT).show();
 
                     //#1 add photo to the 'photo' node 'user_photos' node
+                    addPhotoToDatabase(caption, firebaseURI.toString());
 
                     //#2 navigate to the main feed so that user can see the photo
 
@@ -110,6 +117,37 @@ public class FirebaseMethods {
 
         }
     }
+
+    private String getTimeStamp(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+        return simpleDateFormat.format(new Date());
+    }
+
+    private void addPhotoToDatabase(String caption, String firebaseURI) {
+        Log.d(TAG, "addPhotoToDatabase: adding photos to database.");
+
+        String tags = StringManipulation.getTags(caption);
+        String newPhotoKey = mRef.child(mContext.getString(R.string.dbname_photos)).push().getKey();
+        Photo photo = new Photo();
+        photo.setCaption(caption);
+        photo.setDate_created(getTimeStamp());
+        photo.setImage_path(firebaseURI);
+        photo.setTags(tags);
+        photo.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        photo.setPhoto_id(newPhotoKey);
+
+        //insert into database
+
+        mRef.child(mContext.getString(R.string.dbname_user_photos))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(newPhotoKey).setValue(photo);
+
+        mRef.child(mContext.getString(R.string.dbname_photos))
+                .child(newPhotoKey).setValue(photo);
+
+    }
+
 
     public int getImageCount(DataSnapshot dataSnapshot){
         int count = 0;
