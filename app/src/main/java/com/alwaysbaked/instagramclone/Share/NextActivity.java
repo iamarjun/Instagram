@@ -2,6 +2,7 @@ package com.alwaysbaked.instagramclone.Share;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -54,6 +55,8 @@ public class NextActivity extends AppCompatActivity {
     //variables
     private int imageCount = 0;
     private String imgURL;
+    private Intent intent;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,22 +84,41 @@ public class NextActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: attempting to share the image to the feed.");
                 Toast.makeText(mContext, "Uploading image to firebase cloud stroage", Toast.LENGTH_SHORT).show();
                 String caption = mCaption.getText().toString();
-                mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgURL, null);
 
+                if (intent.hasExtra(getString(R.string.select_image))) {
+                    imgURL = intent.getStringExtra(getString(R.string.select_image));
+                    mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgURL, null);
+
+
+                } else if (intent.hasExtra(getString(R.string.select_bitmap))){
+                    bitmap = intent.getParcelableExtra(getString(R.string.select_bitmap));
+                    mFirebaseMethods.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, null, bitmap);
+                }
             }
         });
 
         setImage();
-
     }
 
     /**
      * gets the image url from the incoming intent and displays the chosen image
      */
     private void setImage(){
-        Intent intent = getIntent();
-        imgURL = intent.getStringExtra(getString(R.string.select_image));
-        UniversalImageLoader.setImage(imgURL, mShareImage, null, mAppend);
+        intent = getIntent();
+
+        //from gallery fragment
+        if (intent.hasExtra(getString(R.string.select_image))) {
+            Log.d(TAG, "setImage: got a image url: " + imgURL);
+            imgURL = intent.getStringExtra(getString(R.string.select_image));
+            UniversalImageLoader.setImage(imgURL, mShareImage, null, mAppend);
+
+        }//from photo fragment
+        else if (intent.hasExtra(getString(R.string.select_bitmap))){
+            bitmap = intent.getParcelableExtra(getString(R.string.select_bitmap));
+            Log.d(TAG, "setImage: got a bitmap");
+            mShareImage.setImageBitmap(bitmap);
+        }
+
     }
 
      /*
