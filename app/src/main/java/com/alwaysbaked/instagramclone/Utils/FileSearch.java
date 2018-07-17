@@ -32,7 +32,7 @@ public class FileSearch {
      * @return
      */
     public static ArrayList<String> getFilePath(String directory){
-        Log.d(TAG, "getFilePath: accessing" + directory );
+        Log.d(TAG, "getFilePath: accessing " + directory );
         ArrayList<String> pathArray = new ArrayList<>();
         File file = new File(directory);
         File[] listFiles = file.listFiles();

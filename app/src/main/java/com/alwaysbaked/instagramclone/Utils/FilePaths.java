@@ -9,6 +9,7 @@ public class FilePaths {
     public String ROOT_DIR = Environment.getExternalStorageDirectory().getPath();
     public String CAMERA = ROOT_DIR + "/DCIM/Camera";
     public String PICTURES = ROOT_DIR + "/Pictures";
+    public String DOWNLOAD = ROOT_DIR + "/Download";
 
     //firebase storage path
     public String FIREBASE_IMAGE_STORAGE = "photos/users/";

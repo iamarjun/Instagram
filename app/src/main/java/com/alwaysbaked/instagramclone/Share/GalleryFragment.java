@@ -117,6 +117,9 @@ public class GalleryFragment extends Fragment {
             directories = FileSearch.getDirectoryPaths(filePaths.PICTURES);
         }
 
+        directories.add(filePaths.CAMERA);
+        directories.add(filePaths.DOWNLOAD);
+
         ArrayList<String> directoryNames = new ArrayList<>();
         for (int i = 0; i < directories.size() ; i++) {
             int index = directories.get(i).lastIndexOf("/") + 1;
@@ -124,7 +127,9 @@ public class GalleryFragment extends Fragment {
             directoryNames.add(string);
         }
 
-        directories.add(filePaths.CAMERA);
+        for (String dir: directoryNames) {
+            Log.d(TAG, "init: directoryNames: " + dir);
+        }
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_item, directoryNames);
