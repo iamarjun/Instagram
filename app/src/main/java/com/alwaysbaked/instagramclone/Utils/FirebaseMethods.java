@@ -91,7 +91,7 @@ public class FirebaseMethods {
                     storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            Log.d(TAG, "onSuccess: image uri: " + uri.toString());
+                            Log.d(TAG, "onSuccess: image uri: " + uri);
                             addPhotoToDatabase(caption, uri.toString());
 
                         }
@@ -214,6 +214,7 @@ public class FirebaseMethods {
 
     private void addPhotoToDatabase(String caption, String firebaseURI) {
         Log.d(TAG, "addPhotoToDatabase: adding photos to database.");
+        Log.d(TAG, "addPhotoToDatabase: photo uri: " + firebaseURI);
 
         String tags = StringManipulation.getTags(caption);
         String newPhotoKey = mRef.child(mContext.getString(R.string.dbname_photos)).push().getKey();

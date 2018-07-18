@@ -2,10 +2,10 @@ package com.alwaysbaked.instagramclone.Profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,22 +19,27 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.alwaysbaked.instagramclone.Login.LoginActivity;
-import com.alwaysbaked.instagramclone.Models.User;
+import com.alwaysbaked.instagramclone.Models.Photo;
 import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.Models.UserSettings;
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
 import com.alwaysbaked.instagramclone.Utils.FirebaseMethods;
+import com.alwaysbaked.instagramclone.Utils.GridImageAdapter;
 import com.alwaysbaked.instagramclone.Utils.UniversalImageLoader;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +48,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private static final int ACTIVITY_NUMBER = 4;
+    private static final int GRID_COLUMN = 3;
 
     private Context mContext;
 
@@ -51,9 +57,11 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mRef;
+    private FirebaseStorage storage;
     private FirebaseMethods mFirebaseMethods;
 
 
+    //widgets
     @BindView(R.id.tvUsername)
     TextView mUsername;
     @BindView(R.id.tvPosts)
@@ -71,7 +79,6 @@ public class ProfileFragment extends Fragment {
 
     @BindView(R.id.tvEditProfile)
     TextView mEditProfile;
-
 
 
     @BindView(R.id.profileProgressBar)
@@ -100,12 +107,14 @@ public class ProfileFragment extends Fragment {
         Log.d(TAG, "onCreateView: started");
         mContext = getActivity();
         mFirebaseMethods = new FirebaseMethods(mContext);
+        storage = FirebaseStorage.getInstance();
 
         ButterKnife.bind(this, view);
 
-        setupToolbar(); 
+        setupToolbar();
         setupBottomNavigationView();
         setupFrebaseAuth();
+        setupGridView();
 
         mEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,11 +126,54 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-
         return view;
     }
 
-    private void setProfileWidget(UserSettings userSettings){
+    private void setupGridView() {
+        Log.d(TAG, "setupGridView: setting up image grid.");
+
+        final ArrayList<Photo> photos = new ArrayList<>();
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+
+        Query query = mRef
+                .child(getString(R.string.dbname_user_photos))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    photos.add(snap.getValue(Photo.class));
+                }
+
+                //setup image grid
+                int grisWidth = getResources().getDisplayMetrics().widthPixels;
+                int imageWidth = grisWidth / GRID_COLUMN;
+
+                mGridView.setColumnWidth(imageWidth);
+
+                //extracting imgURLs
+                ArrayList<String> imgURLs = new ArrayList<>();
+                for (int i = 0; i < photos.size(); i++) {
+                    Log.d(TAG, "onDataChange: image #" + i + " url: " + photos.get(i).getImage_path());
+                    imgURLs.add(photos.get(i).getImage_path());
+
+                }
+
+
+                GridImageAdapter adapter = new GridImageAdapter(mContext, R.layout.layout_grid_imageview, "", imgURLs);
+                mGridView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: query cancelled");
+
+            }
+        });
+    }
+
+    private void setProfileWidget(UserSettings userSettings) {
         Log.d(TAG, "setProfileWidget: settings widgets with data retrieved from firebase: " + userSettings.toString());
 
         //User user = userSettings().getUser();
@@ -145,7 +197,7 @@ public class ProfileFragment extends Fragment {
      */
 
     private void setupToolbar() {
-        ((ProfileActivity)getActivity()).setSupportActionBar(toolbar);
+        ((ProfileActivity) getActivity()).setSupportActionBar(toolbar);
         profileMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
