@@ -242,7 +242,6 @@ public class ProfileFragment extends Fragment {
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(ACTIVITY_NUMBER);
         menuItem.setChecked(true);
-
     }
 
 

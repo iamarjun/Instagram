@@ -1,22 +1,15 @@
 package com.alwaysbaked.instagramclone.Profile;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.alwaysbaked.instagramclone.Models.Photo;
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.ViewPostFragment;
-import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ProfileActivity extends AppCompatActivity implements ProfileFragment.OnGridImageSelectedListener {
@@ -54,7 +47,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
 
     }
 
-    private void init(){
+    private void init() {
         Log.d(TAG, "init: inflating " + getString(R.string.profile_fragment));
 
         ProfileFragment fragment = new ProfileFragment();
