@@ -5,6 +5,7 @@
     <string name="edit_profile_fragment">Edit profile</string>
     <string name="sign_out_fragment">Sign Out</string>
     <string name="profile_fragment">Profile</string>
+    <string name="view_post_fragment">View Post</string>
 
     <!--Dialog names-->
     <string name="confirm_password_dialog">ConfirmPasswordDialog</string>
@@ -31,6 +32,8 @@
     <string name="select_bitmap">Selected Bitmap</string>
     <string name="return_to_fragment">Return To Fragment</string>
 
+    <!--Bundle arg anmes-->
+    <string name="activity_number">Activity Number</string>
 
     <!--Activity Names-->
     <string name="profile_activity">Profile Activity</string>

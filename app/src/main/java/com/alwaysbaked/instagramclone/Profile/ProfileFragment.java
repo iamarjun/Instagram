@@ -2,7 +2,6 @@ package com.alwaysbaked.instagramclone.Profile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -27,7 +27,6 @@ import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
 import com.alwaysbaked.instagramclone.Utils.FirebaseMethods;
 import com.alwaysbaked.instagramclone.Utils.GridImageAdapter;
 import com.alwaysbaked.instagramclone.Utils.UniversalImageLoader;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,6 +46,23 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
+
+    public interface OnGridImageSelectedListener {
+        void onGridImageSelected(Photo photo, int activityNumber);
+    }
+
+    private OnGridImageSelectedListener mOnGridImageSelectedListener;
+
+    @Override
+    public void onAttach(Context context) {
+        try {
+            mOnGridImageSelectedListener = (OnGridImageSelectedListener) getActivity();
+        } catch (ClassCastException e) {
+            Log.d(TAG, "onAttach: ClassCastException" + e.getMessage());
+        }
+        super.onAttach(context);
+    }
+
     private static final int ACTIVITY_NUMBER = 4;
     private static final int GRID_COLUMN = 3;
 
@@ -161,9 +177,15 @@ public class ProfileFragment extends Fragment {
 
                 }
 
-
                 GridImageAdapter adapter = new GridImageAdapter(mContext, R.layout.layout_grid_imageview, "", imgURLs);
                 mGridView.setAdapter(adapter);
+
+                mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mOnGridImageSelectedListener.onGridImageSelected(photos.get(position), ACTIVITY_NUMBER);
+                    }
+                });
             }
 
             @Override

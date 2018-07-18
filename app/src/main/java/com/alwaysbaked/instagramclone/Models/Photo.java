@@ -1,6 +1,9 @@
 package com.alwaysbaked.instagramclone.Models;
 
-public class Photo {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Photo implements Parcelable{
     private String caption;
     private String date_created;
     private String image_path;
@@ -78,5 +81,15 @@ public class Photo {
                 ", user_id='" + user_id + '\'' +
                 ", tags='" + tags + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }
