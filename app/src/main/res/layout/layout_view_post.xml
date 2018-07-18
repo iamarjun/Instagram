@@ -55,9 +55,120 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/relLayout1"
                 android:scaleType="centerCrop" />
+
+            <RelativeLayout
+                android:id="@+id/relLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/post_image">
+                
+                <RelativeLayout
+                    android:id="@+id/heartLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp">
+
+                    <ImageView
+                        android:id="@+id/heart_red"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_heart_red"
+                        android:visibility="invisible"/>
+
+                    <ImageView
+                        android:id="@+id/heart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_heart_outline_black_48dp"
+                        android:visibility="visible"/>
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/heartLayout"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_comment_outline_black_48dp"
+                    android:visibility="visible"/>
+
+                <ImageView
+                    android:id="@+id/send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/comments"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_near_me_black_48dp"
+                    android:visibility="visible"/>
+
+                <ImageView
+                    android:id="@+id/collection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_bookmark_outline_black_48dp"
+                    android:visibility="visible"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relLayout2"
+                android:padding="10dp"
+                android:layout_marginBottom="50dp">
+
+                <TextView
+                    android:id="@+id/image_likes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Linked by arjun, mohit, prince and 30 others."
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:padding="2dp"/>
+
+                <TextView
+                    android:id="@+id/image_caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="arjun Goku is the best"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:layout_below="@id/image_likes"
+                    android:padding="2dp"/>
+
+                <TextView
+                    android:id="@+id/image_comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View All 7 Comments"
+                    android:textColor="@color/silver"
+                    android:textSize="14sp"
+                    android:layout_below="@id/image_caption"
+                    android:padding="2dp" />
+
+
+                <TextView
+                    android:id="@+id/image_timeStamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="13 Auguest 2017"
+                    android:textColor="@color/silver"
+                    android:textSize="12sp"
+                    android:layout_below="@id/image_comments"
+                    android:padding="2dp"/>
+
+            </RelativeLayout>
             
         </RelativeLayout>
 
     </ScrollView>
+
+    <include layout="@layout/layout_bottom_navigation_view" />
 
 </RelativeLayout>
