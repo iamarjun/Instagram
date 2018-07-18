@@ -1,6 +1,5 @@
 package com.alwaysbaked.instagramclone;
 
-import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,17 +10,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alwaysbaked.instagramclone.Models.Photo;
+import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
+import com.alwaysbaked.instagramclone.Utils.FirebaseMethods;
+import com.alwaysbaked.instagramclone.Utils.GridImageAdapter;
 import com.alwaysbaked.instagramclone.Utils.SquareImageView;
 import com.alwaysbaked.instagramclone.Utils.UniversalImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -42,6 +54,9 @@ public class ViewPostFragment extends Fragment {
     //variables
     private Photo mPhoto;
     private int mActivityNumber = 0;
+    private String username = "";
+    private String profleURL = "";
+    private UserAccountSettings mUserAccountSettings;
 
     //widgets
     @BindView(R.id.post_image)
@@ -77,12 +92,20 @@ public class ViewPostFragment extends Fragment {
     @BindView(R.id.collection)
     ImageView mCollection;
 
+    //firebase
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mRef;
+    private FirebaseMethods mFirebaseMethods;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_post, container, false);
         Log.d(TAG, "onCreateView: starting");
+        //mUserAccountSettings = new UserAccountSettings();
 
         ButterKnife.bind(this, view);
 
@@ -94,10 +117,40 @@ public class ViewPostFragment extends Fragment {
             Log.d(TAG, "onCreateView: NullPointerException: " + e.getMessage());
         }
 
+        setupFirebaseAuth();
         setupBottomNavigationView();
-        setupWidgets();
+        getPhotoDetails();
+
 
         return view;
+    }
+
+    private void getPhotoDetails() {
+        Log.d(TAG, "getPhotoDetails: retrieving details from 'photo' node in firebase database");
+
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+
+        Query query = mRef
+                .child(getString(R.string.dbname_users_account_settings))
+                .orderByChild(getString(R.string.field_user_id))
+                .equalTo(mPhoto.getUser_id());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    mUserAccountSettings = snap.getValue(UserAccountSettings.class);
+                }
+                setupWidgets();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: query cancelled");
+
+            }
+        });
+
     }
 
     private void setupWidgets() {
@@ -107,6 +160,10 @@ public class ViewPostFragment extends Fragment {
         } else {
             mImageTimeStamp.setText("TODAY");
         }
+
+        Log.d(TAG, "setupWidgets: username: " + mUserAccountSettings.getUsername());
+        UniversalImageLoader.setImage(mUserAccountSettings.getProfile_photo(), mProfilePhoto, null, "");
+        mUsername.setText(mUserAccountSettings.getUsername());
     }
 
     /**
@@ -116,7 +173,7 @@ public class ViewPostFragment extends Fragment {
     private String getTimeStampDifference() {
         Log.d(TAG, "getTimeStampDifference: gettting timestamp difference");
 
-        String difference = "";
+        String difference;
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("America/NewYork"));
@@ -172,5 +229,50 @@ public class ViewPostFragment extends Fragment {
         Menu menu = bottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(mActivityNumber);
         menuItem.setChecked(true);
+    }
+
+
+     /*
+    ------------------------------------------ Firebase --------------------------------------------
+     */
+
+    /**
+     * setup firebase auth object.
+     */
+
+    private void setupFirebaseAuth() {
+        Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
+
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mRef = mFirebaseDatabase.getReference();
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user != null)
+                    Log.d(TAG, "onAuthStateChanged: signed in:" + user.getUid());
+                else
+                    Log.d(TAG, "onAuthStateChanged: signed out");
+            }
+        };
+
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        mAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthStateListener != null)
+            mAuth.removeAuthStateListener(mAuthStateListener);
     }
 }

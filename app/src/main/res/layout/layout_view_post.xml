@@ -21,8 +21,8 @@
                     android:id="@+id/profile_photo"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_margin="10dp"
                     app:civ_border_color="@color/black"
+                    android:layout_marginStart="10dp"
                     app:civ_border_width="0.5dp"
                     android:layout_centerVertical="true"/>
 
@@ -32,10 +32,10 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/profile_photo"
                     android:text="arjun"
-                    android:layout_margin="10dp"
                     android:layout_centerVertical="true"
                     android:textStyle="bold"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
+                    android:layout_marginStart="10dp"
                     android:textColor="@color/black" />
 
                 <ImageView

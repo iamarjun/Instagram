@@ -9,6 +9,7 @@ public class UserAccountSettings {
     private String profile_photo;
     private String username;
     private String website;
+    private String user_id;
 
     public UserAccountSettings() {
     }
@@ -20,7 +21,8 @@ public class UserAccountSettings {
                                long posts,
                                String profile_photo,
                                String username,
-                               String website) {
+                               String website,
+                               String user_id) {
         this.description = description;
         this.display_name = display_name;
         this.followers = followers;
@@ -29,6 +31,7 @@ public class UserAccountSettings {
         this.profile_photo = profile_photo;
         this.username = username;
         this.website = website;
+        this.user_id = user_id;
     }
 
     public String getDescription() {
@@ -95,6 +98,14 @@ public class UserAccountSettings {
         this.website = website;
     }
 
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
     @Override
     public String toString() {
         return "UserAccountSettings{" +
@@ -106,6 +117,7 @@ public class UserAccountSettings {
                 ", profile_photo='" + profile_photo + '\'' +
                 ", username='" + username + '\'' +
                 ", website='" + website + '\'' +
+                ", user_id='" + user_id + '\'' +
                 '}';
     }
 }
