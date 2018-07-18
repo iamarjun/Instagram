@@ -1,5 +1,6 @@
 package com.alwaysbaked.instagramclone;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,13 @@ import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
 import com.alwaysbaked.instagramclone.Utils.SquareImageView;
 import com.alwaysbaked.instagramclone.Utils.UniversalImageLoader;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,7 +78,6 @@ public class ViewPostFragment extends Fragment {
     ImageView mCollection;
 
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -88,8 +95,43 @@ public class ViewPostFragment extends Fragment {
         }
 
         setupBottomNavigationView();
+        setupWidgets();
 
         return view;
+    }
+
+    private void setupWidgets() {
+        String timeStampDifference = getTimeStampDifference();
+        if (!timeStampDifference.equals("0")) {
+            mImageTimeStamp.setText(timeStampDifference + " DAYS AGO");
+        } else {
+            mImageTimeStamp.setText("TODAY");
+        }
+    }
+
+    /**
+     * returns a string representing the number of days ago the post was made
+     * @return
+     */
+    private String getTimeStampDifference() {
+        Log.d(TAG, "getTimeStampDifference: gettting timestamp difference");
+
+        String difference = "";
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("America/NewYork"));
+        Date today = c.getTime();
+        sdf.format(today);
+        Date timeStamp;
+        final String photoTimeStamp = mPhoto.getDate_created();
+        try {
+            timeStamp  = sdf.parse(photoTimeStamp);
+            difference = String.valueOf(Math.round(((today.getTime() - timeStamp.getTime()) / 1000 / 60 / 60 / 24)));
+        } catch (ParseException e) {
+            Log.d(TAG, "getTimeStampDifference: ParseException: " + e.getMessage());
+            difference = "0";
+        }
+        return difference;
     }
 
     /**
