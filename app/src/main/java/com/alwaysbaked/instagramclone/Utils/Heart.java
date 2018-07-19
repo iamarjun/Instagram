@@ -43,7 +43,7 @@ public class Heart {
             heartRed.setVisibility(View.GONE);
             heartWhite.setVisibility(View.VISIBLE);
 
-            animatorSet.playTogether(scaleDownX, scaleDownY);
+            animatorSet.playTogether(scaleDownY, scaleDownX);
 
         } else if (heartRed.getVisibility() == View.GONE) {
             Log.d(TAG, "toggleLike: toggling red heart on");
@@ -62,7 +62,7 @@ public class Heart {
             heartRed.setVisibility(View.VISIBLE);
             heartWhite.setVisibility(View.GONE);
 
-            animatorSet.playTogether(scaleDownX, scaleDownY);
+            animatorSet.playTogether(scaleDownY, scaleDownX);
         }
 
         animatorSet.start();

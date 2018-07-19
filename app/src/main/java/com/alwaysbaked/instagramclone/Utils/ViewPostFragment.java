@@ -16,7 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alwaysbaked.instagramclone.Models.Like;
 import com.alwaysbaked.instagramclone.Models.Photo;
+import com.alwaysbaked.instagramclone.Models.User;
 import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
@@ -62,6 +64,8 @@ public class ViewPostFragment extends Fragment {
     private UserAccountSettings mUserAccountSettings;
     private GestureDetector mGestureDetector;
     private Heart mHeart;
+    private boolean mLikedByCurrentUser;
+    private StringBuilder mUsers;
 
     //widgets
     @BindView(R.id.post_image)
@@ -136,6 +140,77 @@ public class ViewPostFragment extends Fragment {
         return view;
     }
 
+    private void getLikesString() {
+        Log.d(TAG, "getLikesString: getting likes string");
+
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+        Query query = mRef
+                .child(getString(R.string.dbname_photos))
+                .orderByChild(mPhoto.getUser_id())
+                .equalTo(getString(R.string.field_likes));
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mUsers = new StringBuilder();
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+
+                    DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+                    Query query = mRef
+                            .child(getString(R.string.dbname_users))
+                            .orderByChild(getString(R.string.field_likes))
+                            .equalTo(snap.getValue(Like.class).getUser_id());
+
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                                Log.d(TAG, "onDataChange: found like: " + snap.getValue(User.class).getUsername());
+
+                                mUsers.append(snap.getValue(User.class).getUsername());
+                                mUsers.append(", ");
+                            }
+
+                            String[] splitUSers = mUsers.toString().split(", ");
+
+                            if (mUsers.toString().contains(mUserAccountSettings.getUsername())) {
+                                mLikedByCurrentUser = true;
+                            } else {
+                                mLikedByCurrentUser = false;
+                            }
+
+                            int likes = splitUSers.length;
+
+                            if (likes == 1) {
+
+                            } else if (likes == 2) {
+
+                            } else if (likes == 3) {
+
+                            } else if (likes > 4) {
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void testToggle() {
         mHeartRed.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -164,7 +239,29 @@ public class ViewPostFragment extends Fragment {
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             Log.d(TAG, "onDoubleTap: double tap detected");
-            mHeart.toggleLike();
+            DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+
+            Query query = mRef
+                    .child(getString(R.string.dbname_photos))
+                    .orderByChild(mPhoto.getUser_id())
+                    .equalTo(getString(R.string.field_likes));
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
+
+                        //case#1 The user already liked the photo
+
+                        //case#2 The user has not liked the photo
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
             return true;
         }
 
