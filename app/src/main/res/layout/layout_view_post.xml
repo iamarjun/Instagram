@@ -89,7 +89,7 @@
                 </RelativeLayout>
 
                 <ImageView
-                    android:id="@+id/comments"
+                    android:id="@+id/commentBubble"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/heartLayout"
@@ -102,7 +102,7 @@
                     android:id="@+id/send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/comments"
+                    android:layout_toEndOf="@id/commentBubble"
                     android:layout_marginStart="10dp"
                     android:src="@drawable/ic_send"
                     android:visibility="visible"
@@ -129,7 +129,7 @@
                 android:layout_marginBottom="50dp">
 
                 <TextView
-                    android:id="@+id/image_likes"
+                    android:id="@+id/tvLikes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Linked by arjun, mohit, prince and 30 others."
@@ -138,34 +138,34 @@
                     android:padding="2dp"/>
 
                 <TextView
-                    android:id="@+id/image_caption"
+                    android:id="@+id/tvCaption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="arjun Goku is the best"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:layout_below="@id/image_likes"
+                    android:layout_below="@id/tvLikes"
                     android:padding="2dp"/>
 
                 <TextView
-                    android:id="@+id/image_comments"
+                    android:id="@+id/tvComments"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="View All 7 Comments"
                     android:textColor="@color/silver"
                     android:textSize="14sp"
-                    android:layout_below="@id/image_caption"
+                    android:layout_below="@id/tvCaption"
                     android:padding="2dp" />
 
 
                 <TextView
-                    android:id="@+id/image_timeStamp"
+                    android:id="@+id/tvTimeStamp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="13 Auguest 2017"
                     android:textColor="@color/silver"
                     android:textSize="12sp"
-                    android:layout_below="@id/image_comments"
+                    android:layout_below="@id/tvComments"
                     android:padding="2dp"/>
 
             </RelativeLayout>
