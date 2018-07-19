@@ -137,8 +137,8 @@ public class ViewPostFragment extends Fragment {
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
         Query query = mRef
                 .child(getString(R.string.dbname_photos))
-                .orderByChild(mPhoto.getUser_id())
-                .equalTo(getString(R.string.field_likes));
+                .child(mPhoto.getPhoto_id())
+                .child(getString(R.string.field_likes));
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -149,7 +149,7 @@ public class ViewPostFragment extends Fragment {
                     DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
                     Query query = mRef
                             .child(getString(R.string.dbname_users))
-                            .orderByChild(getString(R.string.field_likes))
+                            .orderByChild(getString(R.string.field_user_id))
                             .equalTo(snap.getValue(Like.class).getUser_id());
 
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -227,8 +227,8 @@ public class ViewPostFragment extends Fragment {
             final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
             Query query = mRef
                     .child(getString(R.string.dbname_photos))
-                    .orderByChild(mPhoto.getUser_id())
-                    .equalTo(getString(R.string.field_likes));
+                    .child(mPhoto.getPhoto_id())
+                    .child(getString(R.string.field_likes));
 
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
