@@ -1,13 +1,15 @@
-package com.alwaysbaked.instagramclone;
+package com.alwaysbaked.instagramclone.Utils;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.alwaysbaked.instagramclone.Models.Photo;
 import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
+import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
 import com.alwaysbaked.instagramclone.Utils.FirebaseMethods;
 import com.alwaysbaked.instagramclone.Utils.GridImageAdapter;
@@ -57,6 +60,7 @@ public class ViewPostFragment extends Fragment {
     private String username = "";
     private String profleURL = "";
     private UserAccountSettings mUserAccountSettings;
+    private GestureDetector mGestureDetector;
 
     //widgets
     @BindView(R.id.post_image)
@@ -81,8 +85,8 @@ public class ViewPostFragment extends Fragment {
 
     @BindView(R.id.dotMenu)
     ImageView mDotMenu;
-    @BindView(R.id.heart)
-    ImageView mHeart;
+    @BindView(R.id.heart_white)
+    ImageView mHeartWhite;
     @BindView(R.id.heart_red)
     ImageView mHeartRed;
     @BindView(R.id.comments)
@@ -105,7 +109,7 @@ public class ViewPostFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_post, container, false);
         Log.d(TAG, "onCreateView: starting");
-        //mUserAccountSettings = new UserAccountSettings();
+        mGestureDetector = new GestureDetector(getContext(), new GestureListener());
 
         ButterKnife.bind(this, view);
 
@@ -120,9 +124,40 @@ public class ViewPostFragment extends Fragment {
         setupFirebaseAuth();
         setupBottomNavigationView();
         getPhotoDetails();
+        testToggle();
 
 
         return view;
+    }
+
+    private void testToggle() {
+        mHeartRed.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mGestureDetector.onTouchEvent(event);
+            }
+        });
+
+        mHeartWhite.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mGestureDetector.onTouchEvent(event);
+            }
+        });
+
+    }
+
+    public class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return super.onDown(e);
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            return super.onDoubleTap(e);
+        }
+
     }
 
     private void getPhotoDetails() {

@@ -10,7 +10,8 @@
         
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
             <RelativeLayout
                 android:id="@+id/relLayout1"
@@ -40,8 +41,8 @@
 
                 <ImageView
                     android:id="@+id/dotMenu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_dot"
                     android:layout_alignParentEnd="true"
                     android:layout_margin="10dp"
@@ -60,29 +61,30 @@
                 android:id="@+id/relLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_below="@+id/post_image"
-                android:padding="5dp">
+                android:layout_below="@+id/post_image">
                 
                 <RelativeLayout
                     android:id="@+id/heartLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp">
+                    android:layout_marginStart="10dp"
+                    android:padding="7dp"
+                    android:layout_centerVertical="true">
 
                     <ImageView
                         android:id="@+id/heart_red"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/ic_like_red"
+                        android:src="@drawable/ic_heart_red"
                         android:visibility="invisible"/>
 
                     <ImageView
-                        android:id="@+id/heart"
+                        android:id="@+id/heart_white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/ic_like"
+                        android:src="@drawable/ic_heart_white"
                         android:visibility="visible"/>
 
                 </RelativeLayout>
@@ -92,9 +94,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/heartLayout"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="10dp"
                     android:src="@drawable/ic_comment"
-                    android:visibility="visible"/>
+                    android:visibility="visible"
+                    android:layout_centerVertical="true"/>
 
                 <ImageView
                     android:id="@+id/send"
@@ -103,7 +106,8 @@
                     android:layout_toEndOf="@id/comments"
                     android:layout_marginStart="10dp"
                     android:src="@drawable/ic_send"
-                    android:visibility="visible"/>
+                    android:visibility="visible"
+                    android:layout_centerVertical="true"/>
 
                 <ImageView
                     android:id="@+id/collection"
@@ -112,7 +116,8 @@
                     android:layout_marginEnd="5dp"
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/ic_collection"
-                    android:visibility="visible"/>
+                    android:visibility="visible"
+                    android:layout_centerVertical="true"/>
 
             </RelativeLayout>
 

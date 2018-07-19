@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.alwaysbaked.instagramclone.Models.Photo;
 import com.alwaysbaked.instagramclone.R;
-import com.alwaysbaked.instagramclone.ViewPostFragment;
+import com.alwaysbaked.instagramclone.Utils.ViewPostFragment;
 
 import butterknife.ButterKnife;
 
