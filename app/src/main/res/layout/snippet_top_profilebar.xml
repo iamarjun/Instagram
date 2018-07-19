@@ -32,7 +32,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="20dp"
-                    android:src="@drawable/ic_ellipses" />
+                    android:src="@drawable/ic_dot" />
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>

@@ -20,11 +20,11 @@ import butterknife.ButterKnife;
 public class ConfirmDialogPassword extends DialogFragment {
     private static final String TAG = "ConfirmDialogPassword";
 
-    public interface OnConfirmpasswordListener{
+    public interface OnConfirmPasswordListener {
         public void confirmPassword(String password);
     }
 
-    private OnConfirmpasswordListener mOnConfirmpasswordListener;
+    private OnConfirmPasswordListener mOnConfirmPasswordListener;
 
     @BindView(R.id.tvDialogCancel)
     TextView mCancel;
@@ -56,7 +56,7 @@ public class ConfirmDialogPassword extends DialogFragment {
 
                 String password = mConfirmPassword.getText().toString();
                 if (!password.equals("")) {
-                    mOnConfirmpasswordListener.confirmPassword(password);
+                    mOnConfirmPasswordListener.confirmPassword(password);
                     getDialog().dismiss();
                 }
 
@@ -73,7 +73,7 @@ public class ConfirmDialogPassword extends DialogFragment {
         super.onAttach(context);
 
         try {
-            mOnConfirmpasswordListener = (OnConfirmpasswordListener) getTargetFragment();
+            mOnConfirmPasswordListener = (OnConfirmPasswordListener) getTargetFragment();
         }catch (ClassCastException e) {
             Log.d(TAG, "onAttach: ClassCastException: " + e.getMessage());
         }

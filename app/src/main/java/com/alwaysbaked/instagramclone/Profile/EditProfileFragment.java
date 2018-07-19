@@ -40,7 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EditProfileFragment extends Fragment implements ConfirmDialogPassword.OnConfirmpasswordListener {
+public class EditProfileFragment extends Fragment implements ConfirmDialogPassword.OnConfirmPasswordListener {
 
     @Override
     public void confirmPassword(String password) {

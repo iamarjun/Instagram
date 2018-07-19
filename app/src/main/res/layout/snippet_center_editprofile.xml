@@ -47,7 +47,7 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_displayname" />
+                    android:src="@drawable/ic_profile" />
 
                 <EditText
                     android:id="@+id/name"
@@ -74,7 +74,7 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_username" />
+                    android:src="@drawable/ic_user_black" />
 
                 <EditText
                     android:id="@+id/username"
@@ -129,7 +129,7 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_description" />
+                    android:src="@drawable/ic_bio" />
 
                 <EditText
                     android:id="@+id/description"
@@ -195,7 +195,7 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_phonenumber" />
+                    android:src="@drawable/ic_phone" />
 
                 <EditText
                     android:id="@+id/phone_number"
