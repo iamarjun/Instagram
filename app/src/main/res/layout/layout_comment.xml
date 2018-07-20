@@ -28,7 +28,7 @@
             android:layout_marginEnd="50dp">
 
             <TextView
-                android:id="@+id/comment_username"
+                android:id="@+id/tvUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/field_username"
@@ -38,26 +38,27 @@
                 android:layout_margin="5dp"/>
 
             <TextView
+                android:id="@+id/tvComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/field_username"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:layout_margin="5dp"
-                android:layout_toEndOf="@id/comment_username" />
+                android:layout_toEndOf="@id/tvUsername" />
 
             <TextView
-                android:id="@+id/comment_timestamp"
+                android:id="@+id/tvTimeStamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="33 w"
                 android:textColor="@color/silver"
                 android:textSize="14sp"
                 android:layout_margin="5dp"
-                android:layout_below="@id/comment_username"/>
+                android:layout_below="@id/tvComment"/>
 
             <TextView
-                android:id="@+id/comment_likes"
+                android:id="@+id/tvLikes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="30 likes"
@@ -65,11 +66,11 @@
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:layout_margin="5dp"
-                android:layout_below="@id/comment_username"
-                android:layout_toEndOf="@id/comment_timestamp"/>
+                android:layout_below="@id/tvUsername"
+                android:layout_toEndOf="@id/tvTimeStamp"/>
 
             <TextView
-                android:id="@+id/comment_reply"
+                android:id="@+id/tvReply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Reply"
@@ -77,14 +78,15 @@
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:layout_margin="5dp"
-                android:layout_below="@id/comment_username"
-                android:layout_toEndOf="@id/comment_likes"/>
+                android:layout_below="@id/tvUsername"
+                android:layout_toEndOf="@id/tvLikes"/>
 
         </RelativeLayout>
 
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/like"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_centerVertical="true"

@@ -251,12 +251,12 @@ public class FirebaseMethods {
     }
 
     /**
-     * update username in 'users's' and 'user_account_settings's' nodes
+     * update mUsername in 'users's' and 'user_account_settings's' nodes
      *
      * @param username
      */
     public void updateUsername(String username) {
-        Log.d(TAG, "updateUsername: updating username to " + username);
+        Log.d(TAG, "updateUsername: updating mUsername to " + username);
         mRef.child(mContext.getString(R.string.dbname_users))
                 .child(userID)
                 .child(mContext.getString(R.string.field_username))
@@ -344,8 +344,8 @@ public class FirebaseMethods {
 
     }
 
-   /* public boolean checkIfUsernameExists(String username, DataSnapshot dataSnapshot) {
-        Log.d(TAG, "checkIfUsernameExists: checking if " + username + " already exists.");
+   /* public boolean checkIfUsernameExists(String mUsername, DataSnapshot dataSnapshot) {
+        Log.d(TAG, "checkIfUsernameExists: checking if " + mUsername + " already exists.");
 
         User user = new User();
 
@@ -355,9 +355,9 @@ public class FirebaseMethods {
             Log.d(TAG, "checkIfUsernameExists: datasnapshot: " + ds.child(userID));
 
             user.setUsername(ds.getValue(User.class).getUsername());
-            Log.d(TAG, "checkIfUsernameExists: username: " + user.getUsername());
+            Log.d(TAG, "checkIfUsernameExists: mUsername: " + user.getUsername());
 
-            if (StringManipulation.expandUsername(user.getUsername()).equals(username)) {
+            if (StringManipulation.expandUsername(user.getUsername()).equals(mUsername)) {
                 Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH: " + user.getUsername());
                 return true;
             }
@@ -386,7 +386,7 @@ public class FirebaseMethods {
      * adding information to user and user_account_settings node.
      *
      * @param email         email of the user, also user for email verification
-     * @param username      username of the user ??!! duh !!
+     * @param username      mUsername of the user ??!! duh !!
      * @param description   user's description
      * @param website       user's website link
      * @param profile_photo user's profile photo.

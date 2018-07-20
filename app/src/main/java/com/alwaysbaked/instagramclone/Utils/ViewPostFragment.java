@@ -132,7 +132,7 @@ public class ViewPostFragment extends Fragment {
     }
 
     private void getLikesString() {
-        Log.d(TAG, "getLikesString: getting likes string");
+        Log.d(TAG, "getLikesString: getting mLikes string");
 
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
         Query query = mRef
@@ -156,7 +156,7 @@ public class ViewPostFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                                Log.d(TAG, "onDataChange: found like: " + snap.getValue(User.class).getUsername());
+                                Log.d(TAG, "onDataChange: found mLike: " + snap.getValue(User.class).getUsername());
 
                                 mUsers.append(snap.getValue(User.class).getUsername());
                                 mUsers.append(", ");
@@ -256,14 +256,14 @@ public class ViewPostFragment extends Fragment {
 
                         //case#2 The user has not liked the photo
                         else if (!mLikedByCurrentUser) {
-                            //add new like
+                            //add new mLike
                             addNewLike();
                             break;
                         }
                     }
 
                     if (!dataSnapshot.exists()) {
-                        //add new like
+                        //add new mLike
                         addNewLike();
 
                     }
@@ -280,7 +280,7 @@ public class ViewPostFragment extends Fragment {
     }
 
     private void addNewLike() {
-        Log.d(TAG, "addNewLike: add a new like.");
+        Log.d(TAG, "addNewLike: add a new mLike.");
 
         String newLikeID = mRef.push().getKey();
         Like like = new Like();
@@ -343,7 +343,7 @@ public class ViewPostFragment extends Fragment {
             mTimeStamp.setText(timeStampDifference + " DAYS AGO");
         }
 
-        Log.d(TAG, "setupWidgets: username: " + mUserAccountSettings.getUsername());
+        Log.d(TAG, "setupWidgets: mUsername: " + mUserAccountSettings.getUsername());
         UniversalImageLoader.setImage(mUserAccountSettings.getProfile_photo(), mProfilePhoto, null, "");
         mUsername.setText(mUserAccountSettings.getUsername());
         mLikes.setText(mLikesString);
@@ -380,7 +380,7 @@ public class ViewPostFragment extends Fragment {
      * @return
      */
     private String getTimeStampDifference() {
-        Log.d(TAG, "getTimeStampDifference: gettting timestamp difference");
+        Log.d(TAG, "getTimeStampDifference: gettting mTimeStamp difference");
 
         String difference;
         Calendar c = Calendar.getInstance();
