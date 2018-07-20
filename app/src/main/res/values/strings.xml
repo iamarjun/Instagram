@@ -59,8 +59,7 @@
     <string name="string_share_to">Share to</string>
     <string name="string_photo">Photo</string>
     <string name="string_comment">Comments</string>
-
-
+    <string name="field_search">Search</string>
 
 
 </resources>
