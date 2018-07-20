@@ -164,11 +164,7 @@ public class ViewPostFragment extends Fragment {
 
                             String[] splitUsers = mUsers.toString().split(", ");
 
-                            if (mUsers.toString().contains(mUserAccountSettings.getUsername())) {
-                                mLikedByCurrentUser = true;
-                            } else {
-                                mLikedByCurrentUser = false;
-                            }
+                            mLikedByCurrentUser = mUsers.toString().contains(mUserAccountSettings.getUsername() + ", ");
 
                             int likes = splitUsers.length;
 
@@ -351,6 +347,7 @@ public class ViewPostFragment extends Fragment {
         UniversalImageLoader.setImage(mUserAccountSettings.getProfile_photo(), mProfilePhoto, null, "");
         mUsername.setText(mUserAccountSettings.getUsername());
         mLikes.setText(mLikesString);
+        mCaption.setText(mPhoto.getCaption());
 
         if (mLikedByCurrentUser) {
             mHeartWhite.setVisibility(View.GONE);
