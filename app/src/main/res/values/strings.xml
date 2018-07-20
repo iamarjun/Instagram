@@ -60,6 +60,7 @@
     <string name="string_photo">Photo</string>
     <string name="string_comment">Comments</string>
     <string name="field_search">Search</string>
+    <string name="field_name">Name</string>
 
 
 </resources>
