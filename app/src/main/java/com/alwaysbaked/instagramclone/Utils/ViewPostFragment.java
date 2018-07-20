@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alwaysbaked.instagramclone.Models.Comment;
 import com.alwaysbaked.instagramclone.Models.Like;
 import com.alwaysbaked.instagramclone.Models.Photo;
 import com.alwaysbaked.instagramclone.Models.User;
@@ -33,9 +34,13 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -79,6 +84,7 @@ public class ViewPostFragment extends Fragment {
     private boolean mLikedByCurrentUser;
     private StringBuilder mUsers;
     private String mLikesString;
+    private Context mContext;
 
     //widgets
     @BindView(R.id.post_image)
@@ -129,18 +135,66 @@ public class ViewPostFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_post, container, false);
         Log.d(TAG, "onCreateView: starting");
-        mGestureDetector = new GestureDetector(getContext(), new GestureListener());
+        mContext = getActivity();
+        mGestureDetector = new GestureDetector(mContext, new GestureListener());
 
         ButterKnife.bind(this, view);
 
         mHeart = new Heart(mHeartWhite, mHeartRed);
 
         try {
-            mPhoto = getPhotoFromBundle();
-            UniversalImageLoader.setImage(mPhoto.getImage_path(), mPostImage, null, "");
+            //mPhoto = getPhotoFromBundle();
+
+            UniversalImageLoader.setImage(getPhotoFromBundle().getImage_path(), mPostImage, null, "");
             mActivityNumber = getActivityNumberFromBundle();
-            getPhotoDetails();
-            getLikesString();
+
+            String photoID = getPhotoFromBundle().getPhoto_id();
+
+            Query query = FirebaseDatabase.getInstance().getReference()
+                    .child(mContext.getString(R.string.dbname_photos))
+                    .orderByChild(mContext.getString(R.string.field_photo_id))
+                    .equalTo(photoID);
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
+
+                        Photo photo = new Photo();
+                        Map<String, Object> objectMap = (HashMap<String, Object>) snap.getValue();
+
+                        photo.setCaption(objectMap.get(mContext.getString(R.string.field_caption)).toString());
+                        photo.setTags(objectMap.get(mContext.getString(R.string.field_tags)).toString());
+                        photo.setDate_created(objectMap.get(mContext.getString(R.string.field_date_created)).toString());
+                        photo.setPhoto_id(objectMap.get(mContext.getString(R.string.field_photo_id)).toString());
+                        photo.setUser_id(objectMap.get(mContext.getString(R.string.field_user_id)).toString());
+                        photo.setImage_path(objectMap.get(mContext.getString(R.string.field_image_path)).toString());
+
+                        List<Comment> commentList = new ArrayList<>();
+
+                        for (DataSnapshot dSnap : snap.child(mContext.getString(R.string.field_comments)).getChildren()) {
+                            Comment comment = new Comment();
+                            comment.setUser_id(dSnap.getValue(Comment.class).getUser_id());
+                            comment.setComment(dSnap.getValue(Comment.class).getComment());
+                            comment.setDate_created(dSnap.getValue(Comment.class).getDate_created());
+
+                            commentList.add(comment);
+                        }
+                        photo.setComments(commentList);
+                        mPhoto = photo;
+
+                        getPhotoDetails();
+                        getLikesString();
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.d(TAG, "onCancelled: query cancelled");
+
+                }
+            });
 
         } catch (NullPointerException e) {
             Log.d(TAG, "onCreateView: NullPointerException: " + e.getMessage());
@@ -157,9 +211,9 @@ public class ViewPostFragment extends Fragment {
 
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
         Query query = mRef
-                .child(getString(R.string.dbname_photos))
+                .child(mContext.getString(R.string.dbname_photos))
                 .child(mPhoto.getPhoto_id())
-                .child(getString(R.string.field_likes));
+                .child(mContext.getString(R.string.field_likes));
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -169,8 +223,8 @@ public class ViewPostFragment extends Fragment {
 
                     DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
                     Query query = mRef
-                            .child(getString(R.string.dbname_users))
-                            .orderByChild(getString(R.string.field_user_id))
+                            .child(mContext.getString(R.string.dbname_users))
+                            .orderByChild(mContext.getString(R.string.field_user_id))
                             .equalTo(snap.getValue(Like.class).getUser_id());
 
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -368,6 +422,21 @@ public class ViewPostFragment extends Fragment {
         mUsername.setText(mUserAccountSettings.getUsername());
         mLikes.setText(mLikesString);
         mCaption.setText(mPhoto.getCaption());
+
+        if (mPhoto.getComments().size() > 0) {
+            mComments.setText("View All " + mPhoto.getComments().size() + " Comments...");
+        }else {
+            mComments.setText("");
+        }
+
+        mComments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating to comments thread.");
+
+                mOnCommentThreadSelectedListener.OnCommentThreadSelectedListener(mPhoto);
+            }
+        });
 
         mBack.setOnClickListener(new View.OnClickListener() {
             @Override

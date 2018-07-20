@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.alwaysbaked.instagramclone.Models.Comment;
 import com.alwaysbaked.instagramclone.Models.Like;
 import com.alwaysbaked.instagramclone.Models.Photo;
 import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
@@ -174,6 +175,20 @@ public class ProfileFragment extends Fragment {
                     photo.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
                     photo.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
                     photo.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
+
+                    List<Comment> comments = new ArrayList<>();
+
+                    for (DataSnapshot dSnap : snap.child(getString(R.string.field_comments)).getChildren()) {
+                        Comment comment = new Comment();
+                        comment.setUser_id(dSnap.getValue(Comment.class).getUser_id());
+                        comment.setComment(dSnap.getValue(Comment.class).getComment());
+                        comment.setDate_created(dSnap.getValue(Comment.class).getDate_created());
+
+                        comments.add(comment);
+                    }
+                    photo.setComments(comments);
+
+
 
                     List<Like> likesList = new ArrayList<>();
 
