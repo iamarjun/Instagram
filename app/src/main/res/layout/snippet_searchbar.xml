@@ -13,7 +13,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp">
 
                 <ImageView
                     android:id="@+id/search"
@@ -32,16 +33,11 @@
                     android:background="@null"
                     android:layout_toEndOf="@+id/search"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <ImageView
-                    android:id="@+id/clear"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="15dp"
-                    android:src="@drawable/ic_cross"
-                    android:layout_alignParentEnd="true"/>
+                    android:textSize="20sp"
+                    android:maxLines="1"
+                    android:lines="1"
+                    android:inputType="text"
+                    android:ellipsize="end" />
 
             </RelativeLayout>
 

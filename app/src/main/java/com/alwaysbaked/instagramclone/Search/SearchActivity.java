@@ -1,6 +1,7 @@
 package com.alwaysbaked.instagramclone.Search;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alwaysbaked.instagramclone.Models.User;
+import com.alwaysbaked.instagramclone.Profile.ProfileActivity;
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
 import com.alwaysbaked.instagramclone.Utils.UserListAdapter;
@@ -141,6 +143,12 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "onItemClick: selected user: " + mUserList.get(position).toString());
+
+                //navigate to profile activity
+                Intent intent = new Intent(mContext, ProfileActivity.class);
+                intent.putExtra(getString(R.string.calling_activity), getString(R.string.search_activity));
+                intent.putExtra(getString(R.string.intent_user), mUserList.get(position));
+                startActivity(intent);
             }
         });
     }

@@ -7,6 +7,7 @@
     <string name="profile_fragment">Profile</string>
     <string name="view_post_fragment">View Post</string>
     <string name="view_comments_fragment">View Comments</string>
+    <string name="view_profile_fragment">View Profile</string>
 
     <!--Dialog names-->
     <string name="confirm_password_dialog">ConfirmPasswordDialog</string>
@@ -40,13 +41,15 @@
     <string name="select_image">Selected Image</string>
     <string name="select_bitmap">Selected Bitmap</string>
     <string name="return_to_fragment">Return To Fragment</string>
+    <string name="intent_user">User</string>
 
     <!--Bundle arg anmes-->
     <string name="activity_number">Activity Number</string>
 
     <!--Activity Names-->
     <string name="profile_activity">Profile Activity</string>
-    
+    <string name="search_activity">Search Activity</string>
+
     <!--tab names-->
     <string name="gallery">GALLERY</string>
     <string name="photo">PHOTO</string>
