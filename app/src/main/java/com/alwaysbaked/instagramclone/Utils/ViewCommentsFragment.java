@@ -22,6 +22,7 @@ import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,8 +35,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -89,8 +92,6 @@ public class ViewCommentsFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        setupFirebaseAuth();
-
         try {
             mPhoto = getPhotoFromBundle();
 
@@ -98,37 +99,37 @@ public class ViewCommentsFragment extends Fragment {
             Log.d(TAG, "onCreateView: NullPointerException: " + e.getMessage());
         }
 
+        setupFirebaseAuth();
+
         setupProfilePhoto();
 
-        Comment firstComment = new Comment();
-        firstComment.setComment(mPhoto.getCaption());
-        firstComment.setUser_id(mPhoto.getUser_id());
-        firstComment.setDate_created(mPhoto.getDate_created());
+        return view;
+    }
 
-        mComments.add(firstComment);
 
+    private void setupWidgets() {
         CommentListAdapter adapter = new CommentListAdapter(getContext(), R.layout.layout_comment, mComments);
         mCommentListView.setAdapter(adapter);
 
         mPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
-                 if (!mComment.getText().toString().equals("")) {
-                     Log.d(TAG, "onClick: attempting to submit a new comment");
-                     addNewComment(mComment.getText().toString());
 
-                     mComment.setText("");
-                    
+                if (!mComment.getText().toString().equals("")) {
+                    Log.d(TAG, "onClick: attempting to submit a new comment");
+                    addNewComment(mComment.getText().toString());
+
+                    mComment.setText("");
+
                 } else {
-                     Toast.makeText(getContext(), "comment can't be black", Toast.LENGTH_SHORT).show();
-                 }
+                    Toast.makeText(getContext(), "comment can't be black", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-        return view;
-    }
 
+
+    }
     private void closeKeyBoard() {
         View view = getActivity().getCurrentFocus();
 
@@ -200,6 +201,7 @@ public class ViewCommentsFragment extends Fragment {
 
     /**
      * retrieving photo from the incoming bundle from 'ProfileActivity' interface
+     *
      * @return
      */
     private Photo getPhotoFromBundle() {
@@ -238,6 +240,96 @@ public class ViewCommentsFragment extends Fragment {
                     Log.d(TAG, "onAuthStateChanged: signed out");
             }
         };
+
+        mRef.child(getString(R.string.dbname_photos))
+                .child(mPhoto.getPhoto_id())
+                .child(getString(R.string.field_comments))
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        Query query = mRef
+                                .child(getString(R.string.dbname_photos))
+                                .orderByChild(getString(R.string.field_photo_id))
+                                .equalTo(mPhoto.getPhoto_id());
+
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+
+                                    Photo photo = new Photo();
+                                    Map<String, Object> objectMap = (HashMap<String, Object>) snap.getValue();
+
+                                    photo.setCaption(objectMap.get(getString(R.string.field_caption)).toString());
+                                    photo.setTags(objectMap.get(getString(R.string.field_tags)).toString());
+                                    photo.setDate_created(objectMap.get(getString(R.string.field_date_created)).toString());
+                                    photo.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
+                                    photo.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
+                                    photo.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
+
+                                    mComments.clear();
+
+                                    Comment firstComment = new Comment();
+                                    firstComment.setComment(mPhoto.getCaption());
+                                    firstComment.setUser_id(mPhoto.getUser_id());
+                                    firstComment.setDate_created(mPhoto.getDate_created());
+
+                                    mComments.add(firstComment);
+
+                                    for (DataSnapshot dSnap : snap.child(getString(R.string.field_comments)).getChildren()) {
+                                        Comment comment = new Comment();
+                                        comment.setUser_id(dSnap.getValue(Comment.class).getUser_id());
+                                        comment.setComment(dSnap.getValue(Comment.class).getComment());
+                                        comment.setDate_created(dSnap.getValue(Comment.class).getDate_created());
+
+                                        mComments.add(comment);
+                                    }
+                                    photo.setComments(mComments);
+                                    mPhoto = photo;
+
+                                    setupWidgets();
+//
+//                    List<Like> likesList = new ArrayList<>();
+//
+////                    for (DataSnapshot dSnap : snap.child(getString(R.string.field_likes)).getChildren()) {
+////                        Like like = new Like();
+////                        like.setUser_id(dSnap.getValue(Like.class).getUser_id());
+////
+////                        likesList.add(like);
+////                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.d(TAG, "onCancelled: query cancelled");
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     @Override
