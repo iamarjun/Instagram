@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.alwaysbaked.instagramclone.Models.Photo;
 import com.alwaysbaked.instagramclone.R;
+import com.alwaysbaked.instagramclone.Utils.ViewCommentsFragment;
 import com.alwaysbaked.instagramclone.Utils.ViewPostFragment;
 
 import butterknife.ButterKnife;
@@ -29,12 +30,21 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(getString(R.string.view_post_fragment));
         transaction.commit();
-
     }
 
     @Override
     public void OnCommentThreadSelectedListener(Photo photo) {
+        Log.d(TAG, "OnCommentThreadSelectedListener: selected a comment thread");
 
+        ViewCommentsFragment fragment = new ViewCommentsFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(getString(R.string.photo), photo);
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(getString(R.string.view_comments_fragment));
+        transaction.commit();
     }
 
     private static final int ACTIVITY_NUMBER = 4;

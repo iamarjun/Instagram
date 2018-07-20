@@ -381,7 +381,7 @@ public class ViewPostFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating to comments thread");
-                getActivity().getSupportFragmentManager().popBackStack();
+                mOnCommentThreadSelectedListener.OnCommentThreadSelectedListener(mPhoto);
             }
         });
 

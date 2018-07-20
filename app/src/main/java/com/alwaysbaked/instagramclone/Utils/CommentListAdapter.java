@@ -95,7 +95,6 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         }
 
         //set the username and profile photo
-
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
         Query query = mRef
                 .child(mContext.getString(R.string.dbname_users_account_settings))
@@ -110,10 +109,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
 
                     ImageLoader imageLoader = ImageLoader.getInstance();
                     imageLoader.displayImage(snap.getValue(UserAccountSettings.class).getProfile_photo(), viewHolder.mProfilePhoto);
-
-
                 }
-
             }
 
             @Override
@@ -123,36 +119,11 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             }
         });
 
-
-
-        String imgURL = getItem(position);
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(mAppend + imgURL, viewHolder.image, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-                if (viewHolder.mProgressBar != null)
-                    viewHolder.mProgressBar.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                if (viewHolder.mProgressBar != null)
-                    viewHolder.mProgressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                if (viewHolder.mProgressBar != null)
-                    viewHolder.mProgressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-                if (viewHolder.mProgressBar != null)
-                    viewHolder.mProgressBar.setVisibility(View.GONE);
-            }
-        });
-
+        if (position == 0) {
+            viewHolder.mLike.setVisibility(View.GONE);
+            viewHolder.mLikes.setVisibility(View.GONE);
+            viewHolder.mReply.setVisibility(View.GONE);
+        }
         return convertView;
     }
 
@@ -180,6 +151,4 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         }
         return difference;
     }
-
-
 }
