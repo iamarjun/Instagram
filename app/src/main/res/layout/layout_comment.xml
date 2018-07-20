@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:padding="5dp">
+    android:background="@color/white">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_photo"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_margin="20dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_margin="10dp"
         app:civ_border_width="0.5dp"
-        app:civ_border_color="@color/black"/>
+        app:civ_border_color="@color/black"
+        android:layout_centerVertical="true"/>
 
     <RelativeLayout
         android:id="@+id/relLayout1"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/profile_photo"
         android:layout_centerVertical="true"
-        android:layout_marginTop="20dp" >
+        android:layout_marginTop="10dp" >
         
         <RelativeLayout
             android:layout_width="match_parent"
@@ -33,18 +33,17 @@
                 android:layout_height="wrap_content"
                 android:text="@string/field_username"
                 android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_margin="5dp"/>
+                android:textSize="16sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tvComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/field_username"
+                android:text="@string/string_comment"
                 android:textColor="@color/black"
-                android:textSize="18sp"
-                android:layout_margin="5dp"
+                android:textSize="16sp"
+                android:layout_marginStart="10dp"
                 android:layout_toEndOf="@id/tvUsername" />
 
             <TextView
@@ -54,7 +53,6 @@
                 android:text="33 w"
                 android:textColor="@color/silver"
                 android:textSize="14sp"
-                android:layout_margin="5dp"
                 android:layout_below="@id/tvComment"/>
 
             <TextView
@@ -65,7 +63,7 @@
                 android:textColor="@color/silver"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:layout_margin="5dp"
+                android:layout_marginStart="20dp"
                 android:layout_below="@id/tvUsername"
                 android:layout_toEndOf="@id/tvTimeStamp"/>
 
@@ -77,7 +75,7 @@
                 android:textColor="@color/silver"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:layout_margin="5dp"
+                android:layout_marginStart="20dp"
                 android:layout_below="@id/tvUsername"
                 android:layout_toEndOf="@id/tvLikes"/>
 
