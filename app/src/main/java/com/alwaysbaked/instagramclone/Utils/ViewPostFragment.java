@@ -1,5 +1,6 @@
 package com.alwaysbaked.instagramclone.Utils;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -44,6 +45,24 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ViewPostFragment extends Fragment {
     private static final String TAG = "ViewPostFragment";
 
+    public interface OnCommentThreadSelectedListener {
+        void OnCommentThreadSelectedListener(Photo photo);
+    }
+
+    private OnCommentThreadSelectedListener mOnCommentThreadSelectedListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mOnCommentThreadSelectedListener = (OnCommentThreadSelectedListener) getActivity();
+
+        } catch (ClassCastException e) {
+            Log.d(TAG, "onAttach: ClassCastException" + e.getMessage());
+        }
+    }
+
     public ViewPostFragment() {
         super();
         setArguments(new Bundle());
@@ -82,6 +101,8 @@ public class ViewPostFragment extends Fragment {
     @BindView(R.id.tvTimeStamp)
     TextView mTimeStamp;
 
+    @BindView(R.id.backArrow)
+    ImageView mBack;
     @BindView(R.id.dotMenu)
     ImageView mDotMenu;
     @BindView(R.id.heart_white)
@@ -307,7 +328,6 @@ public class ViewPostFragment extends Fragment {
         Log.d(TAG, "getPhotoDetails: retrieving details from 'photo' node in firebase database");
 
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
-
         Query query = mRef
                 .child(getString(R.string.dbname_users_account_settings))
                 .orderByChild(getString(R.string.field_user_id))
@@ -348,6 +368,24 @@ public class ViewPostFragment extends Fragment {
         mUsername.setText(mUserAccountSettings.getUsername());
         mLikes.setText(mLikesString);
         mCaption.setText(mPhoto.getCaption());
+
+        mBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating back");
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        mCommentBubble.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: navigating to comments thread");
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+
 
         if (mLikedByCurrentUser) {
             mHeartWhite.setVisibility(View.GONE);

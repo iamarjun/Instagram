@@ -12,7 +12,7 @@ import com.alwaysbaked.instagramclone.Utils.ViewPostFragment;
 
 import butterknife.ButterKnife;
 
-public class ProfileActivity extends AppCompatActivity implements ProfileFragment.OnGridImageSelectedListener {
+public class ProfileActivity extends AppCompatActivity implements ProfileFragment.OnGridImageSelectedListener, ViewPostFragment.OnCommentThreadSelectedListener {
     private static final String TAG = "ProfileActivity";
 
     @Override
@@ -29,6 +29,11 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(getString(R.string.view_post_fragment));
         transaction.commit();
+
+    }
+
+    @Override
+    public void OnCommentThreadSelectedListener(Photo photo) {
 
     }
 
@@ -56,6 +61,4 @@ public class ProfileActivity extends AppCompatActivity implements ProfileFragmen
         transaction.addToBackStack(getString(R.string.profile_fragment));
         transaction.commit();
     }
-
-
 }

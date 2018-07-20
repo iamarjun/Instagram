@@ -13,7 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alwaysbaked.instagramclone.Models.Comment;
+import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -87,7 +94,34 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             viewHolder.mTimeStamp.setText("today");
         }
 
+        //set the username and profile photo
 
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+        Query query = mRef
+                .child(mContext.getString(R.string.dbname_users_account_settings))
+                .orderByChild(mContext.getString(R.string.field_user_id))
+                .equalTo(getItem(position).getUser_id());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    viewHolder.mUsername.setText(snap.getValue(UserAccountSettings.class).getUsername());
+
+                    ImageLoader imageLoader = ImageLoader.getInstance();
+                    imageLoader.displayImage(snap.getValue(UserAccountSettings.class).getProfile_photo(), viewHolder.mProfilePhoto);
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: query cancelled");
+
+            }
+        });
 
 
 
