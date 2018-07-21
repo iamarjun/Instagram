@@ -11,10 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.alwaysbaked.instagramclone.Login.LoginActivity;
 import com.alwaysbaked.instagramclone.Models.Photo;
-import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
 import com.alwaysbaked.instagramclone.Utils.SectionsPagerAdapter;
@@ -31,14 +33,19 @@ import butterknife.ButterKnife;
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = "HomeActivity";
     private static final int ACTIVITY_NUMBER = 0;
+    private static final int HOME_FRAGMENT = 1;
 
     //widgets
     @BindView(R.id.bottomNavViewBar)
-    BottomNavigationViewEx bottomNavigationViewEx;
-    @BindView(R.id.container)
-    ViewPager viewPager;
+    BottomNavigationViewEx mBottomNavigationViewEx;
+    @BindView(R.id.viewpager_container)
+    ViewPager mViewPager;
     @BindView(R.id.tabs)
-    TabLayout tabLayout;
+    TabLayout mTabLayout;
+    @BindView(R.id.container)
+    FrameLayout mFrameLayout;
+    @BindView(R.id.relLayout0)
+    RelativeLayout mRelativeLayout;
 
     //variables
     private Context mContext = HomeActivity.this;
@@ -65,17 +72,17 @@ public class HomeActivity extends AppCompatActivity {
         //mAuth.signOut();
     }
 
-    public void onCommentThreadSelected(Photo photo, UserAccountSettings settings) {
+    public void onCommentThreadSelected(Photo photo, String callingActivity) {
         Log.d(TAG, "onCommentThreadSelected: selected a comment thread");
 
         ViewCommentsFragment fragment = new ViewCommentsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(getString(R.string.bundle_photo), photo);
-        args.putParcelable(getString(R.string.bundle_user_account_settings), settings);
+        args.putParcelable(getString(R.string.photo), photo);
+        args.putString(getString(R.string.home_activity), getString(R.string.home_activity));
         fragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
+        transaction.replace(R.id.viewpager_container, fragment);
         transaction.addToBackStack(getString(R.string.view_comments_fragment));
         transaction.commit();
     }
@@ -83,6 +90,27 @@ public class HomeActivity extends AppCompatActivity {
     private void initImageLoader() {
         UniversalImageLoader imageLoader = new UniversalImageLoader(mContext);
         ImageLoader.getInstance().init(imageLoader.getConfig());
+    }
+
+    public void hideLayout() {
+        Log.d(TAG, "hideLayout: hiding layout");
+        mRelativeLayout.setVisibility(View.GONE);
+        mFrameLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void showLayout() {
+        Log.d(TAG, "hideLayout: showing layout");
+        mRelativeLayout.setVisibility(View.VISIBLE);
+        mFrameLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (mFrameLayout.getVisibility() == View.VISIBLE) {
+            showLayout();
+        }
     }
 
     /**
@@ -93,12 +121,12 @@ public class HomeActivity extends AppCompatActivity {
         adapter.addFragment(new CameraFragment());// index 0
         adapter.addFragment(new HomeFragment());// index 1
         adapter.addFragment(new MessagesFragment());// index 2
-        viewPager.setAdapter(adapter);
+        mViewPager.setAdapter(adapter);
 
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_camera).setCustomView(R.layout.layout_tab_custom);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_instagram).setCustomView(R.layout.layout_tab_custom);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_send).setCustomView(R.layout.layout_tab_custom);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.getTabAt(0).setIcon(R.drawable.ic_camera).setCustomView(R.layout.layout_tab_custom);
+        mTabLayout.getTabAt(1).setIcon(R.drawable.ic_instagram).setCustomView(R.layout.layout_tab_custom);
+        mTabLayout.getTabAt(2).setIcon(R.drawable.ic_send).setCustomView(R.layout.layout_tab_custom);
     }
 
     /**
@@ -106,9 +134,9 @@ public class HomeActivity extends AppCompatActivity {
      */
     public void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(mContext, this, bottomNavigationViewEx);
-        Menu menu = bottomNavigationViewEx.getMenu();
+        BottomNavigationViewHelper.setupBottomNavigationView(mBottomNavigationViewEx);
+        BottomNavigationViewHelper.enableNavigation(mContext, this, mBottomNavigationViewEx);
+        Menu menu = mBottomNavigationViewEx.getMenu();
         MenuItem menuItem = menu.getItem(ACTIVITY_NUMBER);
         menuItem.setChecked(true);
 
@@ -160,6 +188,7 @@ public class HomeActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
+        mViewPager.setCurrentItem(HOME_FRAGMENT);
         mAuth.addAuthStateListener(mAuthStateListener);
         checkCurrentUser(mAuth.getCurrentUser());
     }

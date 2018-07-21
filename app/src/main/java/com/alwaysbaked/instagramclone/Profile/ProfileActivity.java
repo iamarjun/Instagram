@@ -33,7 +33,7 @@ public class ProfileActivity extends AppCompatActivity implements
         fragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
+        transaction.replace(R.id.viewpager_container, fragment);
         transaction.addToBackStack(getString(R.string.view_post_fragment));
         transaction.commit();
     }
@@ -48,7 +48,7 @@ public class ProfileActivity extends AppCompatActivity implements
         fragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
+        transaction.replace(R.id.viewpager_container, fragment);
         transaction.addToBackStack(getString(R.string.view_comments_fragment));
         transaction.commit();
     }
@@ -84,7 +84,7 @@ public class ProfileActivity extends AppCompatActivity implements
                 fragment.setArguments(args);
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.container, fragment);
+                transaction.replace(R.id.viewpager_container, fragment);
                 transaction.addToBackStack(getString(R.string.view_profile_fragment));
                 transaction.commit();
             } else {
@@ -95,7 +95,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
             ProfileFragment fragment = new ProfileFragment();
             FragmentTransaction transaction = ProfileActivity.this.getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.container, fragment);
+            transaction.replace(R.id.viewpager_container, fragment);
             transaction.addToBackStack(getString(R.string.profile_fragment));
             transaction.commit();
         }

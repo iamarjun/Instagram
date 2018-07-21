@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alwaysbaked.instagramclone.Home.HomeActivity;
 import com.alwaysbaked.instagramclone.Models.Comment;
 import com.alwaysbaked.instagramclone.Models.Photo;
 import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
@@ -111,7 +112,7 @@ public class ViewCommentsFragment extends Fragment {
         mCommentListView.setAdapter(adapter);
 
         //set the profile photo
-        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
         Query query = mRef
                 .child(mContext.getString(R.string.dbname_users_account_settings))
                 .orderByChild(mContext.getString(R.string.field_user_id))
@@ -157,8 +158,13 @@ public class ViewCommentsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating back.");
+                if (getCallingActivityFromBundle().equals(getString(R.string.home_activity))) {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    ((HomeActivity)mContext).showLayout();
 
-                getActivity().getSupportFragmentManager().popBackStack();
+                } else {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
             }
         });
     }
@@ -215,6 +221,21 @@ public class ViewCommentsFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             return bundle.getParcelable(getString(R.string.photo));
+        } else
+            return null;
+    }
+
+    /**
+     * retrieving calling activity from the incoming bundle from 'ProfileActivity' interface
+     *
+     * @return
+     */
+    private String getCallingActivityFromBundle() {
+        Log.d(TAG, "getPhotoFromBundle: arguments: " + getArguments());
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            return bundle.getString(getString(R.string.calling_activity));
         } else
             return null;
     }

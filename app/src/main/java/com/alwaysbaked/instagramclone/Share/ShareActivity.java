@@ -9,14 +9,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.alwaysbaked.instagramclone.R;
-import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
 import com.alwaysbaked.instagramclone.Utils.Permissions;
 import com.alwaysbaked.instagramclone.Utils.SectionsPagerAdapter;
-import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +26,7 @@ public class ShareActivity extends AppCompatActivity {
 
     private Context mContext = ShareActivity.this;
 
-    @BindView(R.id.container)
+    @BindView(R.id.viewpager_container)
     ViewPager mViewPager;
     @BindView(R.id.tabsBottom)
     TabLayout mTabLayout;

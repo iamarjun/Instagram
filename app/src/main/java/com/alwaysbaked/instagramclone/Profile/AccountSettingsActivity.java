@@ -33,7 +33,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     private static final int ACTIVITY_NUMBER = 4;
     @BindView(R.id.bottomNavViewBar)
     BottomNavigationViewEx bottomNavigationViewEx;
-    @BindView(R.id.container)
+    @BindView(R.id.viewpager_container)
     ViewPager mViewPager;
     @BindView(R.id.relLayout1)
     RelativeLayout mRelativeLayout;

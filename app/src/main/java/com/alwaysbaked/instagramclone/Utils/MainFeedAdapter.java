@@ -124,7 +124,9 @@ public class MainFeedAdapter extends ArrayAdapter<Photo>{
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: loading comments thread for: " + getItem(position).getPhoto_id());
-                ((HomeActivity)mContext).onCommentThreadSelected(getItem(position), holder.settings);
+                ((HomeActivity)mContext).onCommentThreadSelected(getItem(position), mContext.getString(R.string.home_activity));
+
+                ((HomeActivity)mContext).hideLayout();
             }
         });
 
@@ -186,10 +188,12 @@ public class MainFeedAdapter extends ArrayAdapter<Photo>{
                     });
 
                     holder.settings = snap.getValue(UserAccountSettings.class);
-                    holder.mComment.setOnClickListener(new View.OnClickListener() {
+                    holder.mCommentBubble.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ((HomeActivity)mContext).onCommentThreadSelected(getItem(position), holder.settings);
+                            ((HomeActivity)mContext).onCommentThreadSelected(getItem(position), mContext.getString(R.string.home_activity));
+
+                            ((HomeActivity)mContext).hideLayout();
                         }
                     });
                 }
@@ -309,7 +313,7 @@ public class MainFeedAdapter extends ArrayAdapter<Photo>{
 
                                 String[] splitUsers = holder.mUsers.toString().split(", ");
 
-                                holder.mLikedByCurrentUser = holder.mUsers.toString().contains(holder.mUser.getUsername() + ", ");
+                                holder.mLikedByCurrentUser = holder.mUsers.toString().contains(mCurrentUsername + ", ");
 
                                 int likes = splitUsers.length;
 
