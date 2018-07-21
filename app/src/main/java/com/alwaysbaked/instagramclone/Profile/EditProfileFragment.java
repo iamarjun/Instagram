@@ -165,13 +165,14 @@ public class EditProfileFragment extends Fragment implements ConfirmDialogPasswo
             }
         });
 
-        //checkmark to save changes
-
+        //check mark to save changes
         mSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: attempting to save changes.");
                 saveProfileSettings();
+                Toast.makeText(getContext(), "Changes Saved", Toast.LENGTH_SHORT).show();
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 

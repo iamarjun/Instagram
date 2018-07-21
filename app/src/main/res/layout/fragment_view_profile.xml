@@ -18,14 +18,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/relLayout1">
 
-        <include layout="@layout/layout_center_profile" />
+        <include layout="@layout/layout_center_view_profile" />
 
     </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/profileProgressBar"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp" />
 

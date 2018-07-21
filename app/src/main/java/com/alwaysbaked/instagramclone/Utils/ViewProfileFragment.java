@@ -18,10 +18,12 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alwaysbaked.instagramclone.Models.Comment;
 import com.alwaysbaked.instagramclone.Models.Like;
 import com.alwaysbaked.instagramclone.Models.Photo;
+import com.alwaysbaked.instagramclone.Models.User;
 import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
 import com.alwaysbaked.instagramclone.Models.UserSettings;
 import com.alwaysbaked.instagramclone.Profile.AccountSettingsActivity;
@@ -66,10 +68,13 @@ public class ViewProfileFragment extends Fragment {
         super.onAttach(context);
     }
 
+    //constants
     private static final int ACTIVITY_NUMBER = 4;
     private static final int GRID_COLUMN = 3;
 
+    //variables
     private Context mContext;
+    private User mUser;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -77,8 +82,6 @@ public class ViewProfileFragment extends Fragment {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mRef;
     private FirebaseStorage storage;
-    private FirebaseMethods mFirebaseMethods;
-
 
     //widgets
     @BindView(R.id.tvUsername)
@@ -122,46 +125,80 @@ public class ViewProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_view_profile, container, false);
         Log.d(TAG, "onCreateView: started");
         mContext = getActivity();
-        mFirebaseMethods = new FirebaseMethods(mContext);
         storage = FirebaseStorage.getInstance();
 
         ButterKnife.bind(this, view);
 
+        try {
+            mUser = getUserFromBundle();
+            init();
+        } catch (NullPointerException e) {
+            Log.d(TAG, "onCreateView: NullPointerException: " + e.getMessage());
+            Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
+            getActivity().getSupportFragmentManager().popBackStack();
+        }
+
         setupToolbar();
         setupBottomNavigationView();
         setupFrebaseAuth();
-        setupGridView();
+        //setupGridView();
 
-        mEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: navigating to " + mContext.getString(R.string.edit_profile_fragment));
-                Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
-                intent.putExtra(getString(R.string.calling_activity), getString(R.string.profile_activity));
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            }
-        });
+//        mEditProfile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "onClick: navigating to " + mContext.getString(R.string.edit_profile_fragment));
+//                Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+//                intent.putExtra(getString(R.string.calling_activity), getString(R.string.profile_activity));
+//                startActivity(intent);
+//                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//            }
+//        });
 
         return view;
     }
 
-    private void setupGridView() {
-        Log.d(TAG, "setupGridView: setting up image grid.");
-
-        final ArrayList<Photo> photos = new ArrayList<>();
+    private void init() {
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
 
-        Query query = mRef
-                .child(getString(R.string.dbname_user_photos))
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        //#1 set the whole profile of the user
+        Query queryProfile = mRef
+                .child(getString(R.string.dbname_users_account_settings))
+                .orderByChild(getString(R.string.field_user_id))
+                .equalTo(mUser.getUser_id());
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        queryProfile.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "onDataChange: found user: "  + ds.getValue(UserAccountSettings.class).toString());
+
+                    UserSettings settings = new UserSettings();
+                    settings.setUser(mUser);
+                    settings.setSettings(ds.getValue(UserAccountSettings.class));
+                    setProfileWidget(settings);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        //#2 populate the image grid with the user's photo
+        Query queryPhotos = mRef
+                .child(getString(R.string.dbname_user_photos))
+                .child(mUser.getUser_id());
+
+        queryPhotos.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Photo> photos = new ArrayList<>();
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
 
                     Photo photo = new Photo();
@@ -201,29 +238,7 @@ public class ViewProfileFragment extends Fragment {
                     photos.add(photo);
                 }
 
-                //setup image grid
-                int grisWidth = getResources().getDisplayMetrics().widthPixels;
-                int imageWidth = grisWidth / GRID_COLUMN;
-
-                mGridView.setColumnWidth(imageWidth);
-
-                //extracting imgURLs
-                ArrayList<String> imgURLs = new ArrayList<>();
-                for (int i = 0; i < photos.size(); i++) {
-                    Log.d(TAG, "onDataChange: image #" + i + " url: " + photos.get(i).getImage_path());
-                    imgURLs.add(photos.get(i).getImage_path());
-
-                }
-
-                GridImageAdapter adapter = new GridImageAdapter(mContext, R.layout.layout_grid_imageview, "", imgURLs);
-                mGridView.setAdapter(adapter);
-
-                mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        mOnGridImageSelectedListener.onGridImageSelected(photos.get(position), ACTIVITY_NUMBER);
-                    }
-                });
+                setupImageGrid(photos);
             }
 
             @Override
@@ -232,6 +247,43 @@ public class ViewProfileFragment extends Fragment {
 
             }
         });
+    }
+
+    private void setupImageGrid(final List<Photo> photos) {
+        //setup image grid
+        int grisWidth = getResources().getDisplayMetrics().widthPixels;
+        int imageWidth = grisWidth / GRID_COLUMN;
+
+        mGridView.setColumnWidth(imageWidth);
+
+        //extracting imgURLs
+        ArrayList<String> imgURLs = new ArrayList<>();
+        for (int i = 0; i < photos.size(); i++) {
+            Log.d(TAG, "onDataChange: image #" + i + " url: " + photos.get(i).getImage_path());
+            imgURLs.add(photos.get(i).getImage_path());
+
+        }
+
+        GridImageAdapter adapter = new GridImageAdapter(mContext, R.layout.layout_grid_imageview, "", imgURLs);
+        mGridView.setAdapter(adapter);
+
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mOnGridImageSelectedListener.onGridImageSelected(photos.get(position), ACTIVITY_NUMBER);
+            }
+        });
+    }
+
+    private User getUserFromBundle() {
+        Log.d(TAG, "getUserFromBundle: args: " + getArguments());
+
+        Bundle bundle = this.getArguments();
+
+        if (bundle != null) {
+            return bundle.getParcelable(getString(R.string.intent_user));
+        } else
+            return null;
     }
 
     private void setProfileWidget(UserSettings userSettings) {
@@ -309,24 +361,6 @@ public class ViewProfileFragment extends Fragment {
                     Log.d(TAG, "onAuthStateChanged: signed out");
             }
         };
-
-        mRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onDataChange: settings user's data");
-
-                //retrieve user information from database.
-                setProfileWidget(mFirebaseMethods.getUserSettings(dataSnapshot));
-
-
-                //retrieve images for the user in question.
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
     }
 
