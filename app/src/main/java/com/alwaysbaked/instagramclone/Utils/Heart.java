@@ -22,12 +22,12 @@ public class Heart {
     }
 
     public void toggleLike() {
-        Log.d(TAG, "toggleLike: toggling heart");
+        Log.d(TAG, "toggleLike: toggling mHeart");
 
         AnimatorSet animatorSet = new AnimatorSet();
 
         if (heartRed.getVisibility() == View.VISIBLE) {
-            Log.d(TAG, "toggleLike: toggling red heart off");
+            Log.d(TAG, "toggleLike: toggling red mHeart off");
 
             heartRed.setScaleX(0.1f);
             heartRed.setScaleY(0.1f);
@@ -46,7 +46,7 @@ public class Heart {
             animatorSet.playTogether(scaleDownY, scaleDownX);
 
         } else if (heartRed.getVisibility() == View.GONE) {
-            Log.d(TAG, "toggleLike: toggling red heart on");
+            Log.d(TAG, "toggleLike: toggling red mHeart on");
 
             heartRed.setScaleX(0.1f);
             heartRed.setScaleY(0.1f);

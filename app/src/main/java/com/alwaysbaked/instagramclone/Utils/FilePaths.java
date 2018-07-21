@@ -12,6 +12,6 @@ public class FilePaths {
     public String DOWNLOAD = ROOT_DIR + "/Download";
 
     //firebase storage path
-    public String FIREBASE_IMAGE_STORAGE = "photos/users/";
+    public String FIREBASE_IMAGE_STORAGE = "photos/mUsers/";
 
 }

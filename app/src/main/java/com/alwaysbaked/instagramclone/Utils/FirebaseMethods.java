@@ -104,7 +104,7 @@ public class FirebaseMethods {
                     });
                     Toast.makeText(mContext, "Upload Success", Toast.LENGTH_SHORT).show();
 
-                    //#2 navigate to the main feed so that user can see the photo
+                    //#2 navigate to the main feed so that mUser can see the photo
                     Intent intent = new Intent(mContext, HomeActivity.class);
                     mContext.startActivity(intent);
 
@@ -251,7 +251,7 @@ public class FirebaseMethods {
     }
 
     /**
-     * update mUsername in 'users's' and 'user_account_settings's' nodes
+     * update mUsername in 'mUsers's' and 'user_account_settings's' nodes
      *
      * @param username
      */
@@ -269,7 +269,7 @@ public class FirebaseMethods {
     }
 
     /**
-     * update email in 'users's' node
+     * update email in 'mUsers's' node
      *
      * @param email
      */
@@ -283,7 +283,7 @@ public class FirebaseMethods {
     }
 
     public void updateUserSettings(String displayName, String website, String description, long phoneNumber) {
-        Log.d(TAG, "updateUserSettings: updating user settings to " + displayName + " " + website + " " + description + " " + phoneNumber + " ");
+        Log.d(TAG, "updateUserSettings: updating mUser settings to " + displayName + " " + website + " " + description + " " + phoneNumber + " ");
 
         if (displayName != null)
             //updating display name
@@ -320,7 +320,7 @@ public class FirebaseMethods {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            // Sign in success, update UI with the signed-in mUser's information
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(mContext, "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
@@ -331,7 +331,7 @@ public class FirebaseMethods {
                             userID = mAuth.getCurrentUser().getUid();
 
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // If sign in fails, display a message to the mUser.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(mContext, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -347,18 +347,18 @@ public class FirebaseMethods {
    /* public boolean checkIfUsernameExists(String mUsername, DataSnapshot dataSnapshot) {
         Log.d(TAG, "checkIfUsernameExists: checking if " + mUsername + " already exists.");
 
-        User user = new User();
+        User mUser = new User();
 
         Log.d(TAG, "checkIfUsernameExists: userid: " + userID);
 
         for (DataSnapshot ds : dataSnapshot.child(userID).getChildren()) {
             Log.d(TAG, "checkIfUsernameExists: datasnapshot: " + ds.child(userID));
 
-            user.setUsername(ds.getValue(User.class).getUsername());
-            Log.d(TAG, "checkIfUsernameExists: mUsername: " + user.getUsername());
+            mUser.setUsername(ds.getValue(User.class).getUsername());
+            Log.d(TAG, "checkIfUsernameExists: mUsername: " + mUser.getUsername());
 
-            if (StringManipulation.expandUsername(user.getUsername()).equals(mUsername)) {
-                Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH: " + user.getUsername());
+            if (StringManipulation.expandUsername(mUser.getUsername()).equals(mUsername)) {
+                Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH: " + mUser.getUsername());
                 return true;
             }
         }
@@ -383,13 +383,13 @@ public class FirebaseMethods {
     }
 
     /**
-     * adding information to user and user_account_settings node.
+     * adding information to mUser and user_account_settings node.
      *
-     * @param email         email of the user, also user for email verification
-     * @param username      mUsername of the user ??!! duh !!
-     * @param description   user's description
-     * @param website       user's website link
-     * @param profile_photo user's profile photo.
+     * @param email         email of the mUser, also mUser for email verification
+     * @param username      mUsername of the mUser ??!! duh !!
+     * @param description   mUser's description
+     * @param website       mUser's website link
+     * @param profile_photo mUser's profile photo.
      */
 
     public void addNewUser(String email, String username, String description, String website, String profile_photo) {
@@ -419,7 +419,7 @@ public class FirebaseMethods {
     }
 
     public UserSettings getUserSettings(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "getUserSettings: retrieveing user account settings from firebase");
+        Log.d(TAG, "getUserSettings: retrieveing mUser account settings from firebase");
 
         User user = new User();
         UserAccountSettings settings = new UserAccountSettings();
@@ -507,7 +507,7 @@ public class FirebaseMethods {
                                     .getUser_id()
                     );
 
-                    Log.d(TAG, "getUserSettings: retrieved users info: " + user.toString());
+                    Log.d(TAG, "getUserSettings: retrieved mUsers info: " + user.toString());
 
                 } catch (NullPointerException e) {
                     Log.e(TAG, "getUserSettings: NullPointerException: " + e.getMessage());

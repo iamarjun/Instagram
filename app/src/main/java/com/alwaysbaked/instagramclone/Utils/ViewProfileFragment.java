@@ -295,7 +295,7 @@ public class ViewProfileFragment extends Fragment {
     }
 
     private void isFollowing() {
-        Log.d(TAG, "isFollowing: checking if following this user");
+        Log.d(TAG, "isFollowing: checking if following this mUser");
         setUnFollowing();
 
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
@@ -310,7 +310,7 @@ public class ViewProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "onDataChange: found user: "  + ds.getValue());
+                    Log.d(TAG, "onDataChange: found mUser: "  + ds.getValue());
 
                     setFollowing();
                 }
@@ -325,7 +325,7 @@ public class ViewProfileFragment extends Fragment {
     }
 
     private void setFollowing() {
-        Log.d(TAG, "setFollowing: updating UI for following this user");
+        Log.d(TAG, "setFollowing: updating UI for following this mUser");
         mFollow.setVisibility(View.GONE);
         mUnFollow.setVisibility(View.VISIBLE);
         mEditProfile.setVisibility(View.GONE);
@@ -333,7 +333,7 @@ public class ViewProfileFragment extends Fragment {
     }
 
     private void setUnFollowing() {
-        Log.d(TAG, "setFollowing: updating UI for UnFollowing this user");
+        Log.d(TAG, "setFollowing: updating UI for UnFollowing this mUser");
         mFollow.setVisibility(View.VISIBLE);
         mUnFollow.setVisibility(View.GONE);
         mEditProfile.setVisibility(View.GONE);
@@ -341,7 +341,7 @@ public class ViewProfileFragment extends Fragment {
     }
 
     private void setCurrentUserProfile() {
-        Log.d(TAG, "setFollowing: updating UI for current user");
+        Log.d(TAG, "setFollowing: updating UI for current mUser");
         mFollow.setVisibility(View.GONE);
         mUnFollow.setVisibility(View.GONE);
         mEditProfile.setVisibility(View.VISIBLE);
@@ -351,7 +351,7 @@ public class ViewProfileFragment extends Fragment {
     private void init() {
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
 
-        //#1 set the whole profile of the user
+        //#1 set the whole profile of the mUser
         Query queryProfile = mRef
                 .child(getString(R.string.dbname_users_account_settings))
                 .orderByChild(getString(R.string.field_user_id))
@@ -362,7 +362,7 @@ public class ViewProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "onDataChange: found user: "  + ds.getValue(UserAccountSettings.class).toString());
+                    Log.d(TAG, "onDataChange: found mUser: "  + ds.getValue(UserAccountSettings.class).toString());
 
                     UserSettings settings = new UserSettings();
                     settings.setUser(mUser);
@@ -378,7 +378,7 @@ public class ViewProfileFragment extends Fragment {
             }
         });
 
-        //#2 populate the image grid with the user's photo
+        //#2 populate the image grid with the mUser's photo
         Query queryPhotos = mRef
                 .child(getString(R.string.dbname_user_photos))
                 .child(mUser.getUser_id());
@@ -477,7 +477,7 @@ public class ViewProfileFragment extends Fragment {
     private void setProfileWidget(UserSettings userSettings) {
         Log.d(TAG, "setProfileWidget: settings widgets with data retrieved from firebase: " + userSettings.toString());
 
-        //User user = userSettings().getUser();
+        //User mUser = userSettings().getUser();
         UserAccountSettings settings = userSettings.getSettings();
 
         UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
@@ -546,7 +546,7 @@ public class ViewProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Check if mUser is signed in (non-null) and update UI accordingly.
         mAuth.addAuthStateListener(mAuthStateListener);
     }
 

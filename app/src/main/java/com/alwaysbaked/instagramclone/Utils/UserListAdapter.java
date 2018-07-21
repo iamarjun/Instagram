@@ -81,7 +81,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "onDataChange: found user: " + ds.getValue(UserAccountSettings.class).toString());
+                    Log.d(TAG, "onDataChange: found mUser: " + ds.getValue(UserAccountSettings.class).toString());
 
                     ImageLoader imageLoader = ImageLoader.getInstance();
                     imageLoader.displayImage(ds.getValue(UserAccountSettings.class).getProfile_photo(), viewHolder.mProfilePhoto);

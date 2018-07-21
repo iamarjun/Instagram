@@ -298,7 +298,7 @@ public class ViewPostFragment extends Fragment {
     }
 
     private void getCurrentUser() {
-        Log.d(TAG, "getCurrentUser: getting the current user");
+        Log.d(TAG, "getCurrentUser: getting the current mUser");
 
         DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
         Query query = mRef
@@ -347,7 +347,7 @@ public class ViewPostFragment extends Fragment {
                     for (DataSnapshot snap : dataSnapshot.getChildren()) {
 
                         String keyID = snap.getKey();
-                        //case#1 The user already liked the photo
+                        //case#1 The mUser already liked the photo
                         if (mLikedByCurrentUser &&
                                 snap.getValue(Like.class).getUser_id()
                                         .equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
@@ -369,7 +369,7 @@ public class ViewPostFragment extends Fragment {
                             getLikesString();
                         }
 
-                        //case#2 The user has not liked the photo
+                        //case#2 The mUser has not liked the photo
                         else if (!mLikedByCurrentUser) {
                             //add new mLike
                             addNewLike();
@@ -502,7 +502,7 @@ public class ViewPostFragment extends Fragment {
             mHeartRed.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    Log.d(TAG, "onTouch: red heart touch detected");
+                    Log.d(TAG, "onTouch: red mHeart touch detected");
                     return mGestureDetector.onTouchEvent(event);
                 }
             });
@@ -513,7 +513,7 @@ public class ViewPostFragment extends Fragment {
             mHeartWhite.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    Log.d(TAG, "onTouch: white heart touch detected");
+                    Log.d(TAG, "onTouch: white mHeart touch detected");
                     return mGestureDetector.onTouchEvent(event);
                 }
             });
@@ -621,7 +621,7 @@ public class ViewPostFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Check if mUser is signed in (non-null) and update UI accordingly.
         mAuth.addAuthStateListener(mAuthStateListener);
     }
 
