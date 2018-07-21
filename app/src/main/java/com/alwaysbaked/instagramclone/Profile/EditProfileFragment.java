@@ -172,7 +172,7 @@ public class EditProfileFragment extends Fragment implements ConfirmDialogPasswo
                 Log.d(TAG, "onClick: attempting to save changes.");
                 saveProfileSettings();
                 Toast.makeText(getContext(), "Changes Saved", Toast.LENGTH_SHORT).show();
-                getActivity().getSupportFragmentManager().popBackStack();
+                getActivity().finish();
             }
         });
 

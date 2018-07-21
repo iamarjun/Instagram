@@ -13,14 +13,14 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp">
 
                 <ImageView
                     android:id="@+id/back"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="10dp"
                     android:src="@drawable/ic_back" />
 
                 <TextView
@@ -32,7 +32,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="20dp"
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical">
 
@@ -45,7 +45,7 @@
                     android:text="@string/string_share"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/link_blue"
                     android:layout_centerVertical="true"/>

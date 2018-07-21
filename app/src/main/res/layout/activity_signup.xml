@@ -95,17 +95,17 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_centerInParent="true" />
 
     <TextView
         android:id="@+id/signingUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/progressBar"
-        android:layout_alignEnd="@id/progressBar"
-        android:layout_alignStart="@id/progressBar"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/progressBar"
+        android:layout_centerInParent="true"
         android:text="Signing Up..."
         android:textColor="@color/black"
         android:textSize="20sp" />

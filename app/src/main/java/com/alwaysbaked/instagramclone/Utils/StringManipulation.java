@@ -7,7 +7,7 @@ public class StringManipulation {
     }
 
     public static String condenseUsername(String username) {
-        return username.replace(" ", ".");
+        return username.toLowerCase().replace(" ", ".");
     }
 
     public static String getTags(String string) {
@@ -15,7 +15,7 @@ public class StringManipulation {
             StringBuilder stringBuilder = new StringBuilder();
             char[] charArray = string.toCharArray();
             boolean foundWord = false;
-            for (char c: charArray) {
+            for (char c : charArray) {
                 if (c == '#') {
                     foundWord = true;
                     stringBuilder.append(c);
@@ -24,7 +24,8 @@ public class StringManipulation {
                     if (foundWord) {
                         stringBuilder.append(c);
                     }
-                } if (c == ' ') {
+                }
+                if (c == ' ') {
                     foundWord = false;
                 }
             }

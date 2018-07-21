@@ -37,7 +37,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     ViewPager mViewPager;
     @BindView(R.id.relLayout1)
     RelativeLayout mRelativeLayout;
-    @BindView(R.id.lvAccountSettngs)
+    @BindView(R.id.lvAccountSettings)
     ListView listView;
     @BindView(R.id.backArrow)
     ImageView backArrow;
