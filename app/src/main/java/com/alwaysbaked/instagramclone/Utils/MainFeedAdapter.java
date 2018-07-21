@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alwaysbaked.instagramclone.Home.HomeActivity;
@@ -60,6 +59,7 @@ public class MainFeedAdapter extends ArrayAdapter<Photo>{
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = context;
         mLayoutResource = resource;
+        mRef = FirebaseDatabase.getInstance().getReference();
     }
 
     static class ViewHolder {
@@ -142,7 +142,7 @@ public class MainFeedAdapter extends ArrayAdapter<Photo>{
 
         //set the image feed
         final ImageLoader loader = ImageLoader.getInstance();
-        loader.displayImage(getItem(position).getImage_path(), holder.mProfilePhoto);
+        loader.displayImage(getItem(position).getImage_path(), holder.mImage);
 
         //set the username and the profile image
         Query query = mRef
@@ -192,6 +192,29 @@ public class MainFeedAdapter extends ArrayAdapter<Photo>{
                             ((HomeActivity)mContext).onCommentThreadSelected(getItem(position), holder.settings);
                         }
                     });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        //get the user object
+
+        Query queryUserObject = mRef
+                .child(mContext.getString(R.string.dbname_users))
+                .orderByChild(mContext.getString(R.string.field_user_id))
+                .equalTo(getItem(position).getUser_id());
+
+        queryUserObject.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "onDataChange: found user " + snap.getValue(User.class).getUsername());
+
+                    holder.mUser = snap.getValue(User.class);
                 }
             }
 
