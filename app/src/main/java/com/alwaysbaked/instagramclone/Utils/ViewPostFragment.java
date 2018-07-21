@@ -85,6 +85,7 @@ public class ViewPostFragment extends Fragment {
     private StringBuilder mUsers;
     private String mLikesString;
     private Context mContext;
+    private User mCurrentUser;
 
     //widgets
     @BindView(R.id.post_image)
@@ -127,7 +128,6 @@ public class ViewPostFragment extends Fragment {
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mRef;
-    private FirebaseMethods mFirebaseMethods;
 
 
     @Nullable
@@ -141,6 +141,15 @@ public class ViewPostFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mHeart = new Heart(mHeartWhite, mHeartRed);
+
+        setupFirebaseAuth();
+        setupBottomNavigationView();
+
+        return view;
+    }
+
+    private void init() {
+        Log.d(TAG, "init: initializing");
 
         try {
             //mPhoto = getPhotoFromBundle();
@@ -183,8 +192,8 @@ public class ViewPostFragment extends Fragment {
                         photo.setComments(commentList);
                         mPhoto = photo;
 
+                        getCurrentUser();
                         getPhotoDetails();
-                        getLikesString();
 
                     }
                 }
@@ -200,10 +209,14 @@ public class ViewPostFragment extends Fragment {
             Log.d(TAG, "onCreateView: NullPointerException: " + e.getMessage());
         }
 
-        setupFirebaseAuth();
-        setupBottomNavigationView();
+    }
 
-        return view;
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (isAdded())
+            init();
     }
 
     private void getLikesString() {
@@ -239,7 +252,7 @@ public class ViewPostFragment extends Fragment {
 
                             String[] splitUsers = mUsers.toString().split(", ");
 
-                            mLikedByCurrentUser = mUsers.toString().contains(mUserAccountSettings.getUsername() + ", ");
+                            mLikedByCurrentUser = mUsers.toString().contains(mCurrentUser.getUsername() + ", ");
 
                             int likes = splitUsers.length;
 
@@ -278,6 +291,33 @@ public class ViewPostFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void getCurrentUser() {
+        Log.d(TAG, "getCurrentUser: getting the current user");
+
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+        Query query = mRef
+                .child(getString(R.string.dbname_users))
+                .orderByChild(getString(R.string.field_user_id))
+                .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    mCurrentUser = snap.getValue(User.class);
+                }
+                getLikesString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: query cancelled");
 
             }
         });

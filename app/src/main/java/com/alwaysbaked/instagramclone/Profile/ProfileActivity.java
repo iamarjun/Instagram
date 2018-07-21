@@ -16,7 +16,10 @@ import com.alwaysbaked.instagramclone.Utils.ViewProfileFragment;
 
 import butterknife.ButterKnife;
 
-public class ProfileActivity extends AppCompatActivity implements ProfileFragment.OnGridImageSelectedListener, ViewPostFragment.OnCommentThreadSelectedListener {
+public class ProfileActivity extends AppCompatActivity implements
+        ProfileFragment.OnGridImageSelectedListener,
+        ViewProfileFragment.OnGridImageSelectedListener,
+        ViewPostFragment.OnCommentThreadSelectedListener {
     private static final String TAG = "ProfileActivity";
 
     @Override
