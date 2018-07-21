@@ -1,6 +1,7 @@
 package com.alwaysbaked.instagramclone.Utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -11,12 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alwaysbaked.instagramclone.Home.HomeActivity;
+import com.alwaysbaked.instagramclone.Models.Comment;
 import com.alwaysbaked.instagramclone.Models.Like;
 import com.alwaysbaked.instagramclone.Models.Photo;
 import com.alwaysbaked.instagramclone.Models.User;
 import com.alwaysbaked.instagramclone.Models.UserAccountSettings;
+import com.alwaysbaked.instagramclone.Profile.ProfileActivity;
 import com.alwaysbaked.instagramclone.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,7 +64,7 @@ public class MainFeedAdapter extends ArrayAdapter<Photo>{
 
     static class ViewHolder {
         CircleImageView mProfilePhoto;
-        TextView mUsername, mLikes, mCaption, mComment, mTimeStamp, m;
+        TextView mUsername, mLikes, mCaption, mComment, mTimeStamp;
         SquareImageView mImage;
         ImageView mRedHeart, mWhiteHeart, mCommentBubble;
 
@@ -74,7 +80,7 @@ public class MainFeedAdapter extends ArrayAdapter<Photo>{
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         final ViewHolder holder;
 
@@ -105,7 +111,123 @@ public class MainFeedAdapter extends ArrayAdapter<Photo>{
             holder = (ViewHolder) convertView.getTag();
         }
 
+        //get the current username
+        getCurrentUsername();
+
+        //get the likes string
+        getLikesString(holder);
+
+        //set the comments
+        List<Comment> comments = getItem(position).getComments();
+        holder.mComment.setText("View All " + comments.size() + " Comments");
+        holder.mComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: loading comments thread for: " + getItem(position).getPhoto_id());
+                ((HomeActivity)mContext).onCommentThreadSelected(getItem(position), holder.settings);
+            }
+        });
+
+        //set the timestamp
+        String timeStampDifference = getTimeStampDifference(getItem(position));
+        if (timeStampDifference.equals("0")) {
+            holder.mTimeStamp.setText("TODAY");
+
+        } else if(timeStampDifference.equals("1")) {
+            holder.mTimeStamp.setText(timeStampDifference + " DAY AGO");
+
+        } else {
+            holder.mTimeStamp.setText(timeStampDifference + " DAYS AGO");
+        }
+
+        //set the image feed
+        final ImageLoader loader = ImageLoader.getInstance();
+        loader.displayImage(getItem(position).getImage_path(), holder.mProfilePhoto);
+
+        //set the username and the profile image
+        Query query = mRef
+                .child(mContext.getString(R.string.dbname_users_account_settings))
+                .orderByChild(mContext.getString(R.string.field_user_id))
+                .equalTo(getItem(position).getUser_id());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    //mCurrentUsername = snap.getValue(UserAccountSettings.class).getUsername();
+
+                    Log.d(TAG, "onDataChange: found user: " + snap.getValue(UserAccountSettings.class).getUsername());
+
+                    holder.mUsername.setText(snap.getValue(UserAccountSettings.class).getUsername());
+                    holder.mUsername.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.d(TAG, "onClick: navigating to " + holder.mUser.getUsername() + "'s profile");
+
+                            Intent intent = new Intent(mContext, ProfileActivity.class);
+                            intent.putExtra(mContext.getString(R.string.calling_activity), mContext.getString(R.string.home_activity));
+                            intent.putExtra(mContext.getString(R.string.intent_user), holder.mUser);
+                            mContext.startActivity(intent);
+                        }
+                    });
+
+                    loader.displayImage(snap.getValue(UserAccountSettings.class).getProfile_photo(), holder.mProfilePhoto);
+                    holder.mProfilePhoto.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.d(TAG, "onClick: navigating to " + holder.mUser.getUsername() + "'s profile");
+
+                            Intent intent = new Intent(mContext, ProfileActivity.class);
+                            intent.putExtra(mContext.getString(R.string.calling_activity), mContext.getString(R.string.home_activity));
+                            intent.putExtra(mContext.getString(R.string.intent_user), holder.mUser);
+                            mContext.startActivity(intent);
+                        }
+                    });
+
+                    holder.settings = snap.getValue(UserAccountSettings.class);
+                    holder.mComment.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((HomeActivity)mContext).onCommentThreadSelected(getItem(position), holder.settings);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
         return convertView;
+    }
+
+    private void getCurrentUsername() {
+        Log.d(TAG, "getCurrentUsername: retrieving user account settings");
+
+        Query query = mRef
+                .child(mContext.getString(R.string.dbname_users))
+                .orderByChild(mContext.getString(R.string.field_user_id))
+                .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    mCurrentUsername = snap.getValue(UserAccountSettings.class).getUsername();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void addNewLike(ViewHolder holder) {

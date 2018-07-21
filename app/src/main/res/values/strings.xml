@@ -47,10 +47,13 @@
 
     <!--Bundle arg anmes-->
     <string name="activity_number">Activity Number</string>
+    <string name="bundle_photo">Bundle Photo</string>
+    <string name="bundle_user_account_settings">Bundle User Account Settings</string>
 
     <!--Activity Names-->
     <string name="profile_activity">Profile Activity</string>
     <string name="search_activity">Search Activity</string>
+    <string name="home_activity">Home Activity</string>
 
     <!--tab names-->
     <string name="gallery">GALLERY</string>

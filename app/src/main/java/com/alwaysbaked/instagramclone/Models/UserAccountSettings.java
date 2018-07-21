@@ -1,6 +1,9 @@
 package com.alwaysbaked.instagramclone.Models;
 
-public class UserAccountSettings {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class UserAccountSettings implements Parcelable{
     private String description;
     private String display_name;
     private long followers;
@@ -33,6 +36,30 @@ public class UserAccountSettings {
         this.website = website;
         this.user_id = user_id;
     }
+
+    protected UserAccountSettings(Parcel in) {
+        description = in.readString();
+        display_name = in.readString();
+        followers = in.readLong();
+        following = in.readLong();
+        posts = in.readLong();
+        profile_photo = in.readString();
+        username = in.readString();
+        website = in.readString();
+        user_id = in.readString();
+    }
+
+    public static final Creator<UserAccountSettings> CREATOR = new Creator<UserAccountSettings>() {
+        @Override
+        public UserAccountSettings createFromParcel(Parcel in) {
+            return new UserAccountSettings(in);
+        }
+
+        @Override
+        public UserAccountSettings[] newArray(int size) {
+            return new UserAccountSettings[size];
+        }
+    };
 
     public String getDescription() {
         return description;
@@ -119,5 +146,23 @@ public class UserAccountSettings {
                 ", website='" + website + '\'' +
                 ", user_id='" + user_id + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(description);
+        dest.writeString(display_name);
+        dest.writeLong(followers);
+        dest.writeLong(following);
+        dest.writeLong(posts);
+        dest.writeString(profile_photo);
+        dest.writeString(username);
+        dest.writeString(website);
+        dest.writeString(user_id);
     }
 }
