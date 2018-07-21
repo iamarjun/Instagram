@@ -19,6 +19,7 @@ import com.alwaysbaked.instagramclone.Login.LoginActivity;
 import com.alwaysbaked.instagramclone.Models.Photo;
 import com.alwaysbaked.instagramclone.R;
 import com.alwaysbaked.instagramclone.Utils.BottomNavigationViewHelper;
+import com.alwaysbaked.instagramclone.Utils.MainFeedAdapter;
 import com.alwaysbaked.instagramclone.Utils.SectionsPagerAdapter;
 import com.alwaysbaked.instagramclone.Utils.UniversalImageLoader;
 import com.alwaysbaked.instagramclone.Utils.ViewCommentsFragment;
@@ -30,8 +31,20 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements MainFeedAdapter.OnLoadMoreItemsListener {
     private static final String TAG = "HomeActivity";
+    
+    @Override
+    public void onLoadMoreItems() {
+        Log.d(TAG, "onLoadMoreItems: displaying more photos");
+        HomeFragment fragment = (HomeFragment)getSupportFragmentManager()
+                .findFragmentByTag("android:switcher: " + R.id.viewpager_container + ":" + mViewPager.getCurrentItem());
+
+        if (fragment != null) {
+            fragment.displayMorePhoto();
+        }
+
+    }
     private static final int ACTIVITY_NUMBER = 0;
     private static final int HOME_FRAGMENT = 1;
 
@@ -49,6 +62,7 @@ public class HomeActivity extends AppCompatActivity {
 
     //variables
     private Context mContext = HomeActivity.this;
+
 
     //firebase
     private FirebaseAuth mAuth;
@@ -199,6 +213,5 @@ public class HomeActivity extends AppCompatActivity {
         if (mAuthStateListener != null)
             mAuth.removeAuthStateListener(mAuthStateListener);
     }
-
 
 }

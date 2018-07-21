@@ -44,11 +44,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainFeedAdapter extends ArrayAdapter<Photo>{
     private static final String TAG = "MainFeedAdapter";
 
+    public interface OnLoadMoreItemsListener {
+        void onLoadMoreItems();
+    }
+
     //variables
     private LayoutInflater mInflater;
     private int mLayoutResource;
     private Context mContext;
     private String mCurrentUsername;
+    private OnLoadMoreItemsListener mOnLoadMoreItemsListener;
 
     //Firebase
     private DatabaseReference mRef;
@@ -116,6 +121,9 @@ public class MainFeedAdapter extends ArrayAdapter<Photo>{
 
         //get the likes string
         getLikesString(holder);
+
+        //set the caption
+        holder.mCaption.setText(getItem(position).getCaption());
 
         //set the comments
         List<Comment> comments = getItem(position).getComments();
@@ -228,9 +236,31 @@ public class MainFeedAdapter extends ArrayAdapter<Photo>{
             }
         });
 
-
+        if (reachedEndOfList(position)) {
+            loadMoreData();
+        }
 
         return convertView;
+    }
+
+    private boolean reachedEndOfList(int position) {
+        return position == getCount() - 1;
+    }
+
+    private void loadMoreData() {
+        try {
+            mOnLoadMoreItemsListener = (OnLoadMoreItemsListener) getContext();
+        } catch (ClassCastException e) {
+            Log.d(TAG, "loadMoreData: ClassCastException" + e.getMessage());
+        }
+
+        try {
+            mOnLoadMoreItemsListener.onLoadMoreItems();
+        } catch (NullPointerException e) {
+            Log.d(TAG, "loadMoreData: ClassCastException" + e.getMessage());
+        }
+
+
     }
 
     private void getCurrentUsername() {
