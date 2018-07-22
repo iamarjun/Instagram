@@ -26,7 +26,7 @@ Recreating Instagram for Android using Firebase for backend.
 <img src="https://github.com/iamarjun/Instagram/blob/master/screenshots/Screenshot_20180722-150551.jpg" width="300" >
 
 
-## Backend
+## Firebase Features
 <ul>
   <li>Firebase Email Authentication</li>
   <li>Firebase Database</li>
